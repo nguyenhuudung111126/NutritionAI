@@ -1,0 +1,181 @@
+<mxfile host="app.diagrams.net" modified="2026-11-20T05:17:00.000Z" agent="NutriGuardAI" version="24.7.17">
+  <diagram id="nutriguard-workflow" name="Workflow Agent">
+    <mxGraphModel dx="1420" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1150" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- START -->
+        <mxCell id="start" value="START" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="480" y="30" width="120" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- 1. load_context -->
+        <mxCell id="n1" value="&lt;b&gt;1. load_context&lt;/b&gt;&lt;br&gt;Nạp Hồ sơ cá nhân, Xét nghiệm, Dị ứng &amp;amp; Phác đồ Bộ Y tế (regime_tool)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="330" y="105" width="420" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- 2. input_guardrail -->
+        <mxCell id="n2" value="&lt;b&gt;2. input_guardrail&lt;/b&gt;&lt;br&gt;Tiếp nhận yêu cầu &amp;amp; Che PII đầu vào (SĐT, CCCD, BHYT, Email)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="330" y="195" width="420" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- 3. route -->
+        <mxCell id="n3" value="&lt;b&gt;3. route&lt;/b&gt;&lt;br&gt;Phân loại thành 2 nhóm yêu cầu" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="405" y="285" width="270" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- BRANCH 1: Q&A -->
+        <mxCell id="qa" value="&lt;b&gt;Xử lý Q&amp;amp;A&lt;/b&gt;&lt;br&gt;(3 luồng con)" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="210" y="405" width="180" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="q1" value="&lt;b&gt;lookup&lt;/b&gt;&lt;br&gt;Trả thẳng số liệu chuẩn từ 690 món (0 gọi LLM)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="20" y="525" width="175" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="q2" value="&lt;b&gt;safety&lt;/b&gt;&lt;br&gt;RAG (pgvector) + Guardrail + Món thay thế + Gemini" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="210" y="525" width="185" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="q3" value="&lt;b&gt;general&lt;/b&gt;&lt;br&gt;RAG (pgvector) + Gemini tư vấn theo bệnh án" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="410" y="525" width="180" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- BRANCH 2: MEAL PLANNING -->
+        <mxCell id="b3" value="&lt;b&gt;meal_plan&lt;/b&gt;&lt;br&gt;RAG (pgvector) + get_safe_foods (lọc dị ứng &amp;amp; bệnh lý)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="710" y="410" width="330" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="gen" value="&lt;b&gt;Gemini sinh thực đơn JSON&lt;/b&gt;&lt;br&gt;(Hồ sơ + Phác đồ + RAG + Ngân sách/Khẩu vị)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="710" y="505" width="330" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="calc" value="&lt;b&gt;Python tính tổng dinh dưỡng thực tế&lt;/b&gt;&lt;br&gt;(_compute_day_totals)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="710" y="600" width="330" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="gr" value="&lt;b&gt;validate_daily_totals&lt;/b&gt;&lt;br&gt;(Guardrail tổng ngày)" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="755" y="685" width="240" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="save" value="&lt;b&gt;Lưu Database&lt;/b&gt;&lt;br&gt;(meal_plans &amp;amp; meal_plan_items)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="735" y="795" width="280" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- 4. output_guardrail & END -->
+        <mxCell id="out" value="&lt;b&gt;4. output_guardrail&lt;/b&gt;&lt;br&gt;Kiểm tra &amp;amp; lọc PII đầu ra trước khi hiển thị" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="895" width="380" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="end" value="END" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="480" y="990" width="120" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- OBSERVABILITY BOX -->
+        <mxCell id="obs" value="&lt;b&gt;Observability bọc ngoài&lt;/b&gt;&lt;br&gt;(src/observability.py)&lt;br&gt;- start_run_log -&amp;gt; agent_runs&lt;br&gt;- trace_step / Langfuse v5&lt;br&gt;- guardrail_events&lt;br&gt;- finish_run_log (latency, model)" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#f5f5f5;strokeColor=#666666;align=left;spacingLeft=10;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="20" y="95" width="240" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- EDGES -->
+        <mxCell id="e1" edge="1" parent="1" source="start" target="n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="n1" target="n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="n2" target="n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e4" value="Yêu cầu 1: HỎI ĐÁP &amp;amp; THẨM ĐỊNH" edge="1" parent="1" source="n3" target="qa" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;fontStyle=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="Yêu cầu 2: LẬP THỰC ĐƠN" edge="1" parent="1" source="n3" target="b3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;fontStyle=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e6" value="Tra cứu số liệu" edge="1" parent="1" source="qa" target="q1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="Kiểm tra món" edge="1" parent="1" source="qa" target="q2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="Hỏi chung" edge="1" parent="1" source="qa" target="q3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e9" edge="1" parent="1" source="b3" target="gen" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="gen" target="calc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="calc" target="gr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" value="Vượt ngưỡng (tối đa 2 vòng)" edge="1" parent="1" source="gr" target="gen" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;exitX=1;exitY=0.5;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1110" y="722" />
+              <mxPoint x="1110" y="537" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" value="Đạt chuẩn / Hết 2 vòng" edge="1" parent="1" source="gr" target="save" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e14" edge="1" parent="1" source="q1" target="out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="108" y="870" />
+              <mxPoint x="460" y="870" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="q2" target="out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="303" y="870" />
+              <mxPoint x="500" y="870" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="q3" target="out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="870" />
+              <mxPoint x="540" y="870" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="save" target="out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="875" y="870" />
+              <mxPoint x="620" y="870" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e18" edge="1" parent="1" source="out" target="end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_obs1" edge="1" parent="1" source="obs" target="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_obs2" edge="1" parent="1" source="obs" target="end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="10" y="160" />
+              <mxPoint x="10" y="1012" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

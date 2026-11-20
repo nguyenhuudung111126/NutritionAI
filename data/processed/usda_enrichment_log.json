@@ -1,0 +1,2118 @@
+{
+  "matched_count": 125,
+  "unmatched_count": 116,
+  "matched": [
+    {
+      "id": 28,
+      "name": "Củ sắn dây",
+      "usda_id": 11601,
+      "usda_desc": "Yam, raw",
+      "filled": {
+        "potassium_mg": 816.0,
+        "magnesium_mg": 21.0
+      }
+    },
+    {
+      "id": 35,
+      "name": "Khoai riềng",
+      "usda_id": 11697,
+      "usda_desc": "Arrowroot, raw",
+      "filled": {
+        "potassium_mg": 454.0,
+        "magnesium_mg": 25.0
+      }
+    },
+    {
+      "id": 41,
+      "name": "Bột khoai riềng",
+      "usda_id": 20003,
+      "usda_desc": "Arrowroot flour",
+      "filled": {
+        "potassium_mg": 11.0,
+        "magnesium_mg": 3.0
+      }
+    },
+    {
+      "id": 44,
+      "name": "Bột sắn dây",
+      "usda_id": 20003,
+      "usda_desc": "Arrowroot flour",
+      "filled": {
+        "potassium_mg": 11.0,
+        "magnesium_mg": 3.0
+      }
+    },
+    {
+      "id": 65,
+      "name": "Hạt mít",
+      "usda_id": 9144,
+      "usda_desc": "Jackfruit, raw",
+      "filled": {
+        "fiber_g": 1.5
+      }
+    },
+    {
+      "id": 85,
+      "name": "Bí ngô",
+      "usda_id": 11422,
+      "usda_desc": "Pumpkin, raw",
+      "filled": {
+        "lipid_g": 0.1
+      }
+    },
+    {
+      "id": 86,
+      "name": "Cà bát",
+      "usda_id": 11209,
+      "usda_desc": "Eggplant, raw",
+      "filled": {
+        "lipid_g": 0.18
+      }
+    },
+    {
+      "id": 87,
+      "name": "Cà chua",
+      "usda_id": 11529,
+      "usda_desc": "Tomatoes, red, ripe, raw, year round average",
+      "filled": {
+        "lipid_g": 0.2
+      }
+    },
+    {
+      "id": 88,
+      "name": "Cà pháo",
+      "usda_id": 43146,
+      "usda_desc": "Eggplant, pickled",
+      "filled": {
+        "lipid_g": 0.7
+      }
+    },
+    {
+      "id": 89,
+      "name": "Cà rốt",
+      "usda_id": 11124,
+      "usda_desc": "Carrots, raw",
+      "filled": {
+        "lipid_g": 0.24
+      }
+    },
+    {
+      "id": 91,
+      "name": "Cà tím",
+      "usda_id": 11209,
+      "usda_desc": "Eggplant, raw",
+      "filled": {
+        "lipid_g": 0.18
+      }
+    },
+    {
+      "id": 92,
+      "name": "Cải bắp",
+      "usda_id": 11112,
+      "usda_desc": "Cabbage, red, raw",
+      "filled": {
+        "lipid_g": 0.16
+      }
+    },
+    {
+      "id": 95,
+      "name": "Cải cúc",
+      "usda_id": 11157,
+      "usda_desc": "Chrysanthemum, garland, raw",
+      "filled": {
+        "lipid_g": 0.56
+      }
+    },
+    {
+      "id": 96,
+      "name": "Cải soong",
+      "usda_id": 11591,
+      "usda_desc": "Watercress, raw",
+      "filled": {
+        "lipid_g": 0.1
+      }
+    },
+    {
+      "id": 98,
+      "name": "Cải xanh",
+      "usda_id": 11270,
+      "usda_desc": "Mustard greens, raw",
+      "filled": {
+        "lipid_g": 0.42
+      }
+    },
+    {
+      "id": 99,
+      "name": "Cần ta",
+      "usda_id": 11143,
+      "usda_desc": "Celery, raw",
+      "filled": {
+        "lipid_g": 0.17
+      }
+    },
+    {
+      "id": 101,
+      "name": "Chuối xanh",
+      "usda_id": 9040,
+      "usda_desc": "Bananas, raw",
+      "filled": {
+        "lipid_g": 0.33
+      }
+    },
+    {
+      "id": 102,
+      "name": "Củ cải đỏ",
+      "usda_id": 11676,
+      "usda_desc": "Radish seeds, sprouted, raw",
+      "filled": {
+        "lipid_g": 2.53
+      }
+    },
+    {
+      "id": 103,
+      "name": "Củ cải trắng",
+      "usda_id": 11637,
+      "usda_desc": "Radishes, white icicle, raw",
+      "filled": {
+        "lipid_g": 0.1
+      }
+    },
+    {
+      "id": 105,
+      "name": "Củ đậu",
+      "usda_id": 11603,
+      "usda_desc": "Yambean (jicama), raw",
+      "filled": {
+        "lipid_g": 0.09
+      }
+    },
+    {
+      "id": 107,
+      "name": "Dọc củ cải (non)",
+      "usda_id": 11676,
+      "usda_desc": "Radish seeds, sprouted, raw",
+      "filled": {
+        "lipid_g": 2.53
+      }
+    },
+    {
+      "id": 108,
+      "name": "Dọc mùng",
+      "usda_id": 11522,
+      "usda_desc": "Taro shoots, raw",
+      "filled": {
+        "lipid_g": 0.09
+      }
+    },
+    {
+      "id": 109,
+      "name": "Dưa chuột",
+      "usda_id": 11205,
+      "usda_desc": "Cucumber, with peel, raw",
+      "filled": {
+        "lipid_g": 0.11
+      }
+    },
+    {
+      "id": 110,
+      "name": "Dưa gang",
+      "usda_id": 9183,
+      "usda_desc": "Melons, casaba, raw",
+      "filled": {
+        "lipid_g": 0.1
+      }
+    },
+    {
+      "id": 111,
+      "name": "Đậu cô ve",
+      "usda_id": 11207,
+      "usda_desc": "Dandelion greens, raw",
+      "filled": {
+        "lipid_g": 0.7
+      }
+    },
+    {
+      "id": 112,
+      "name": "Đậu đũa",
+      "usda_id": 11199,
+      "usda_desc": "Yardlong bean, raw",
+      "filled": {
+        "lipid_g": 0.4
+      }
+    },
+    {
+      "id": 113,
+      "name": "Đậu hà lan",
+      "usda_id": 11304,
+      "usda_desc": "Peas, green, raw",
+      "filled": {
+        "lipid_g": 0.4
+      }
+    },
+    {
+      "id": 115,
+      "name": "Đu đủ xanh",
+      "usda_id": 9226,
+      "usda_desc": "Papayas, raw",
+      "filled": {
+        "lipid_g": 0.26,
+        "zinc_mg": 0.08
+      }
+    },
+    {
+      "id": 118,
+      "name": "Giá đậu xanh",
+      "usda_id": 11043,
+      "usda_desc": "Mung beans, mature seeds, sprouted, raw",
+      "filled": {
+        "lipid_g": 0.18
+      }
+    },
+    {
+      "id": 119,
+      "name": "Hành củ tươi",
+      "usda_id": 11291,
+      "usda_desc": "Onions, spring or scallions (includes tops and bulb), raw",
+      "filled": {
+        "lipid_g": 0.19
+      }
+    },
+    {
+      "id": 120,
+      "name": "Hành lá",
+      "usda_id": 11291,
+      "usda_desc": "Onions, spring or scallions (includes tops and bulb), raw",
+      "filled": {
+        "lipid_g": 0.19
+      }
+    },
+    {
+      "id": 121,
+      "name": "Hành tây",
+      "usda_id": 11282,
+      "usda_desc": "Onions, raw",
+      "filled": {
+        "lipid_g": 0.1
+      }
+    },
+    {
+      "id": 122,
+      "name": "Hạt sen tươi",
+      "usda_id": 11254,
+      "usda_desc": "Lotus root, raw",
+      "filled": {
+        "lipid_g": 0.1
+      }
+    },
+    {
+      "id": 124,
+      "name": "Hẹ lá",
+      "usda_id": 11156,
+      "usda_desc": "Chives, raw",
+      "filled": {
+        "lipid_g": 0.73
+      }
+    },
+    {
+      "id": 127,
+      "name": "Khế",
+      "usda_id": 9060,
+      "usda_desc": "Carambola, (starfruit), raw",
+      "filled": {
+        "lipid_g": 0.33
+      }
+    },
+    {
+      "id": 131,
+      "name": "Lá sắn tươi",
+      "usda_id": 11134,
+      "usda_desc": "Cassava, raw",
+      "filled": {
+        "lipid_g": 0.28
+      }
+    },
+    {
+      "id": 132,
+      "name": "Măng chua",
+      "usda_id": 11026,
+      "usda_desc": "Bamboo shoots, raw",
+      "filled": {
+        "lipid_g": 0.3
+      }
+    },
+    {
+      "id": 134,
+      "name": "Măng tây",
+      "usda_id": 11011,
+      "usda_desc": "Asparagus, raw",
+      "filled": {
+        "lipid_g": 0.12
+      }
+    },
+    {
+      "id": 135,
+      "name": "Măng tre",
+      "usda_id": 11026,
+      "usda_desc": "Bamboo shoots, raw",
+      "filled": {
+        "lipid_g": 0.3
+      }
+    },
+    {
+      "id": 136,
+      "name": "Mướp",
+      "usda_id": 11220,
+      "usda_desc": "Gourd, dishcloth (towelgourd), raw",
+      "filled": {
+        "lipid_g": 0.2
+      }
+    },
+    {
+      "id": 137,
+      "name": "Mướp đắng",
+      "usda_id": 11024,
+      "usda_desc": "Balsam-pear (bitter gourd), pods, raw",
+      "filled": {
+        "lipid_g": 0.17
+      }
+    },
+    {
+      "id": 138,
+      "name": "Mướp nhật bản",
+      "usda_id": 11477,
+      "usda_desc": "Squash, summer, zucchini, includes skin, raw",
+      "filled": {
+        "lipid_g": 0.32
+      }
+    },
+    {
+      "id": 141,
+      "name": "Ngó sen",
+      "usda_id": 11254,
+      "usda_desc": "Lotus root, raw",
+      "filled": {
+        "lipid_g": 0.1
+      }
+    },
+    {
+      "id": 144,
+      "name": "Ớt vàng to",
+      "usda_id": 11951,
+      "usda_desc": "Peppers, sweet, yellow, raw",
+      "filled": {
+        "lipid_g": 0.21
+      }
+    },
+    {
+      "id": 145,
+      "name": "Ớt xanh to",
+      "usda_id": 11333,
+      "usda_desc": "Peppers, sweet, green, raw",
+      "filled": {
+        "lipid_g": 0.17
+      }
+    },
+    {
+      "id": 148,
+      "name": "Rau bí",
+      "usda_id": 11418,
+      "usda_desc": "Pumpkin leaves, raw",
+      "filled": {
+        "lipid_g": 0.4
+      }
+    },
+    {
+      "id": 151,
+      "name": "Rau diếp",
+      "usda_id": 11251,
+      "usda_desc": "Lettuce, cos or romaine, raw",
+      "filled": {
+        "lipid_g": 0.3
+      }
+    },
+    {
+      "id": 152,
+      "name": "Rau đay",
+      "usda_id": 11231,
+      "usda_desc": "Jute, potherb, raw",
+      "filled": {
+        "lipid_g": 0.25
+      }
+    },
+    {
+      "id": 153,
+      "name": "Rau diếp cá",
+      "usda_id": 15066,
+      "usda_desc": "Fish, pollock, Alaska, raw (may have been previously frozen)",
+      "filled": {
+        "lipid_g": 0.41
+      }
+    },
+    {
+      "id": 154,
+      "name": "Rau giền cơm",
+      "usda_id": 11003,
+      "usda_desc": "Amaranth leaves, raw",
+      "filled": {
+        "lipid_g": 0.33
+      }
+    },
+    {
+      "id": 158,
+      "name": "Rau khoai lang",
+      "usda_id": 11505,
+      "usda_desc": "Sweet potato leaves, raw",
+      "filled": {
+        "lipid_g": 0.51
+      }
+    },
+    {
+      "id": 162,
+      "name": "Rau mồng tơi",
+      "usda_id": 11986,
+      "usda_desc": "Malabar spinach, cooked",
+      "filled": {
+        "lipid_g": 0.78
+      }
+    },
+    {
+      "id": 163,
+      "name": "Rau mùi",
+      "usda_id": 11165,
+      "usda_desc": "Coriander (cilantro) leaves, raw",
+      "filled": {
+        "lipid_g": 0.52
+      }
+    },
+    {
+      "id": 165,
+      "name": "Rau muống",
+      "usda_id": 11503,
+      "usda_desc": "Swamp cabbage, (skunk cabbage), raw",
+      "filled": {
+        "lipid_g": 0.2
+      }
+    },
+    {
+      "id": 171,
+      "name": "Rau rút",
+      "usda_id": 11143,
+      "usda_desc": "Celery, raw",
+      "filled": {
+        "lipid_g": 0.17,
+        "potassium_mg": 260.0,
+        "sodium_mg": 80.0,
+        "iron_mg": 0.2,
+        "zinc_mg": 0.13,
+        "magnesium_mg": 11.0
+      }
+    },
+    {
+      "id": 172,
+      "name": "Rau sà lách",
+      "usda_id": 11251,
+      "usda_desc": "Lettuce, cos or romaine, raw",
+      "filled": {
+        "lipid_g": 0.3
+      }
+    },
+    {
+      "id": 173,
+      "name": "Rau sam",
+      "usda_id": 11427,
+      "usda_desc": "Purslane, raw",
+      "filled": {
+        "lipid_g": 0.36
+      }
+    },
+    {
+      "id": 178,
+      "name": "Su hào",
+      "usda_id": 11241,
+      "usda_desc": "Kohlrabi, raw",
+      "filled": {
+        "lipid_g": 0.1
+      }
+    },
+    {
+      "id": 180,
+      "name": "Su su",
+      "usda_id": 11149,
+      "usda_desc": "Chayote, fruit, raw",
+      "filled": {
+        "lipid_g": 0.13
+      }
+    },
+    {
+      "id": 181,
+      "name": "Súp lơ trắng",
+      "usda_id": 11965,
+      "usda_desc": "Cauliflower, green, raw",
+      "filled": {
+        "lipid_g": 0.3
+      }
+    },
+    {
+      "id": 183,
+      "name": "Thìa là",
+      "usda_id": 2045,
+      "usda_desc": "Dill weed, fresh",
+      "filled": {
+        "lipid_g": 1.12
+      }
+    },
+    {
+      "id": 185,
+      "name": "Tỏi ta",
+      "usda_id": 11215,
+      "usda_desc": "Garlic, raw",
+      "filled": {
+        "lipid_g": 0.5
+      }
+    },
+    {
+      "id": 186,
+      "name": "Tỏi tây (cả lá)",
+      "usda_id": 11246,
+      "usda_desc": "Leeks, (bulb and lower leaf-portion), raw",
+      "filled": {
+        "lipid_g": 0.3
+      }
+    },
+    {
+      "id": 190,
+      "name": "Cải ngọt",
+      "usda_id": 11274,
+      "usda_desc": "Mustard spinach, (tendergreen), raw",
+      "filled": {
+        "fiber_g": 2.8
+      }
+    },
+    {
+      "id": 191,
+      "name": "Cải thảo",
+      "usda_id": 11116,
+      "usda_desc": "Cabbage, chinese (pak-choi), raw",
+      "filled": {
+        "lipid_g": 0.2,
+        "fiber_g": 1.0
+      }
+    },
+    {
+      "id": 192,
+      "name": "Ngọn su su",
+      "usda_id": 11149,
+      "usda_desc": "Chayote, fruit, raw",
+      "filled": {
+        "fiber_g": 1.7
+      }
+    },
+    {
+      "id": 193,
+      "name": "Đậu ván",
+      "usda_id": 11224,
+      "usda_desc": "Hyacinth-beans, immature seeds, raw",
+      "filled": {
+        "lipid_g": 0.2,
+        "fiber_g": 3.3
+      }
+    },
+    {
+      "id": 194,
+      "name": "Cà chua muối",
+      "usda_id": 11540,
+      "usda_desc": "Tomato juice, canned, with salt added",
+      "filled": {
+        "lipid_g": 0.29,
+        "potassium_mg": 217.0,
+        "sodium_mg": 253.0,
+        "phosphorus_mg": 19.0,
+        "calcium_mg": 10.0,
+        "iron_mg": 0.39,
+        "zinc_mg": 0.11,
+        "magnesium_mg": 11.0
+      }
+    },
+    {
+      "id": 195,
+      "name": "Cà muối nén",
+      "usda_id": 43146,
+      "usda_desc": "Eggplant, pickled",
+      "filled": {
+        "lipid_g": 0.7
+      }
+    },
+    {
+      "id": 196,
+      "name": "Cà muối sổi",
+      "usda_id": 43146,
+      "usda_desc": "Eggplant, pickled",
+      "filled": {
+        "lipid_g": 0.7,
+        "potassium_mg": 12.0,
+        "sodium_mg": 1674.0,
+        "phosphorus_mg": 9.0,
+        "calcium_mg": 25.0,
+        "iron_mg": 0.77,
+        "zinc_mg": 0.23,
+        "magnesium_mg": 6.0
+      }
+    },
+    {
+      "id": 197,
+      "name": "Dưa cải bắp",
+      "usda_id": 11439,
+      "usda_desc": "Sauerkraut, canned, solids and liquids",
+      "filled": {
+        "lipid_g": 0.14
+      }
+    },
+    {
+      "id": 198,
+      "name": "Dưa cải bẹ",
+      "usda_id": 11270,
+      "usda_desc": "Mustard greens, raw",
+      "filled": {
+        "lipid_g": 0.42
+      }
+    },
+    {
+      "id": 199,
+      "name": "Dưa cải sen",
+      "usda_id": 11254,
+      "usda_desc": "Lotus root, raw",
+      "filled": {
+        "lipid_g": 0.1,
+        "potassium_mg": 556.0,
+        "sodium_mg": 40.0,
+        "iron_mg": 1.16,
+        "zinc_mg": 0.39,
+        "magnesium_mg": 23.0
+      }
+    },
+    {
+      "id": 200,
+      "name": "Dưa chuột muối",
+      "usda_id": 11937,
+      "usda_desc": "Pickles, cucumber, dill or kosher dill",
+      "filled": {
+        "lipid_g": 0.3
+      }
+    },
+    {
+      "id": 201,
+      "name": "Dưa giá",
+      "usda_id": 11043,
+      "usda_desc": "Mung beans, mature seeds, sprouted, raw",
+      "filled": {
+        "lipid_g": 0.18,
+        "potassium_mg": 149.0,
+        "sodium_mg": 6.0,
+        "zinc_mg": 0.41,
+        "magnesium_mg": 21.0
+      }
+    },
+    {
+      "id": 218,
+      "name": "Chuối tây",
+      "usda_id": 9040,
+      "usda_desc": "Bananas, raw",
+      "filled": {
+        "fiber_g": 2.6
+      }
+    },
+    {
+      "id": 226,
+      "name": "Dứa ta",
+      "usda_id": 9266,
+      "usda_desc": "Pineapple, raw, all varieties",
+      "filled": {
+        "lipid_g": 0.12
+      }
+    },
+    {
+      "id": 230,
+      "name": "Gioi",
+      "usda_id": 9312,
+      "usda_desc": "Rose-apples, raw",
+      "filled": {
+        "lipid_g": 0.3
+      }
+    },
+    {
+      "id": 233,
+      "name": "Hồng ngâm",
+      "usda_id": 9263,
+      "usda_desc": "Persimmons, japanese, raw",
+      "filled": {
+        "lipid_g": 0.19,
+        "magnesium_mg": 9.0
+      }
+    },
+    {
+      "id": 237,
+      "name": "Mãng cầu xiêm",
+      "usda_id": 9315,
+      "usda_desc": "Soursop, raw",
+      "filled": {
+        "lipid_g": 0.3,
+        "zinc_mg": 0.1
+      }
+    },
+    {
+      "id": 238,
+      "name": "Mắc coọc",
+      "usda_id": 9340,
+      "usda_desc": "Pears, asian, raw",
+      "filled": {
+        "lipid_g": 0.23,
+        "fiber_g": 3.6
+      }
+    },
+    {
+      "id": 242,
+      "name": "Mít mật",
+      "usda_id": 9144,
+      "usda_desc": "Jackfruit, raw",
+      "filled": {
+        "lipid_g": 0.64
+      }
+    },
+    {
+      "id": 247,
+      "name": "Nhãn",
+      "usda_id": 9172,
+      "usda_desc": "Longans, raw",
+      "filled": {
+        "lipid_g": 0.1
+      }
+    },
+    {
+      "id": 250,
+      "name": "Nho ta (chua)",
+      "usda_id": 9129,
+      "usda_desc": "Grapes, muscadine, raw",
+      "filled": {
+        "lipid_g": 0.47
+      }
+    },
+    {
+      "id": 255,
+      "name": "Quả cóc",
+      "usda_id": 9145,
+      "usda_desc": "Java-plum, (jambolan), raw",
+      "filled": {
+        "lipid_g": 0.23,
+        "potassium_mg": 79.0,
+        "sodium_mg": 14.0,
+        "magnesium_mg": 15.0
+      }
+    },
+    {
+      "id": 258,
+      "name": "Quất chín",
+      "usda_id": 9149,
+      "usda_desc": "Kumquats, raw",
+      "filled": {
+        "lipid_g": 0.86
+      }
+    },
+    {
+      "id": 259,
+      "name": "Quít",
+      "usda_id": 9218,
+      "usda_desc": "Tangerines, (mandarin oranges), raw",
+      "filled": {
+        "lipid_g": 0.31
+      }
+    },
+    {
+      "id": 262,
+      "name": "Táo ta",
+      "usda_id": 9146,
+      "usda_desc": "Jujube, raw",
+      "filled": {
+        "lipid_g": 0.2
+      }
+    },
+    {
+      "id": 267,
+      "name": "Xoài chín",
+      "usda_id": 9436,
+      "usda_desc": "Mango nectar, canned",
+      "filled": {
+        "fiber_g": 0.3
+      }
+    },
+    {
+      "id": 365,
+      "name": "Thịt lợn, nạc vai",
+      "usda_id": 10072,
+      "usda_desc": "Pork, fresh, shoulder, whole, separable lean only, raw",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 366,
+      "name": "Thịt lợn, nạc mông",
+      "usda_id": 10010,
+      "usda_desc": "Pork, fresh, leg (ham), whole, separable lean only, raw",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 367,
+      "name": "Thịt lợn, nạc thăn",
+      "usda_id": 10948,
+      "usda_desc": "Pork, fresh, loin, top loin (chops), boneless, separable lean only, with added solution, raw",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 368,
+      "name": "Thịt lợn nửa nạc, nửa mỡ, nướng",
+      "usda_id": 10187,
+      "usda_desc": "Pork, fresh, composite of trimmed retail cuts (leg, loin, shoulder, and spareribs), separable lean and fat, raw",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 369,
+      "name": "Thịt gà công nghiệp, cánh",
+      "usda_id": 5105,
+      "usda_desc": "Chicken, broilers or fryers, wing, meat only, raw",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 370,
+      "name": "Thịt gà công nghiệp, đùi",
+      "usda_id": 5080,
+      "usda_desc": "Chicken, broilers or fryers, leg, meat only, raw",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 371,
+      "name": "Thịt gà công nghiệp, lườn",
+      "usda_id": 5062,
+      "usda_desc": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, raw",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 372,
+      "name": "Thịt ngan",
+      "usda_id": 5141,
+      "usda_desc": "Duck, domesticated, meat only, raw",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 464,
+      "name": "Lạc chao dầu",
+      "usda_id": 16089,
+      "usda_desc": "Peanuts, all types, oil-roasted, with salt",
+      "filled": {
+        "fiber_g": 9.4
+      }
+    },
+    {
+      "id": 475,
+      "name": "Cá thu hộp",
+      "usda_id": 15048,
+      "usda_desc": "Fish, mackerel, jack, canned, drained solids",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 476,
+      "name": "Cá trích hộp",
+      "usda_id": 15088,
+      "usda_desc": "Fish, sardine, Atlantic, canned in oil, drained solids with bone",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 477,
+      "name": "Thịt bò hộp",
+      "usda_id": 13348,
+      "usda_desc": "Beef, cured, corned beef, canned",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 478,
+      "name": "Thịt gà hộp",
+      "usda_id": 5311,
+      "usda_desc": "Chicken, canned, no broth",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 479,
+      "name": "Thịt lợn hộp",
+      "usda_id": 10140,
+      "usda_desc": "Pork, cured, ham, regular (approximately 13% fat), canned, roasted",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 480,
+      "name": "Thịt lợn, thịt bò xay hộp",
+      "usda_id": 10185,
+      "usda_desc": "Pork, cured, ham, extra lean and regular, canned, roasted",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 481,
+      "name": "Thịt vịt hầm",
+      "usda_id": 5141,
+      "usda_desc": "Duck, domesticated, meat only, raw",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 491,
+      "name": "Bánh thỏi sô cô la",
+      "usda_id": 42183,
+      "usda_desc": "Candies, MARS SNACKFOOD US, TWIX chocolate fudge cookie bars",
+      "filled": {
+        "fiber_g": 3.0,
+        "potassium_mg": 309.0,
+        "zinc_mg": 0.92,
+        "magnesium_mg": 46.0
+      }
+    },
+    {
+      "id": 494,
+      "name": "Đường cát",
+      "usda_id": 19335,
+      "usda_desc": "Sugars, granulated",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 495,
+      "name": "Đường kính",
+      "usda_id": 19335,
+      "usda_desc": "Sugars, granulated",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 496,
+      "name": "Kẹo bơ cứng",
+      "usda_id": 19070,
+      "usda_desc": "Candies, butterscotch",
+      "filled": {
+        "fiber_g": 0.0
+      }
+    },
+    {
+      "id": 497,
+      "name": "Kẹo cà phê",
+      "usda_id": 19268,
+      "usda_desc": "Candies, dark chocolate coated coffee beans",
+      "filled": {
+        "fiber_g": 7.5
+      }
+    },
+    {
+      "id": 502,
+      "name": "Kẹo Pastille (kẹo ngậm bạc hà)",
+      "usda_id": 19091,
+      "usda_desc": "Candies, YORK Peppermint Pattie",
+      "filled": {
+        "fiber_g": 2.0
+      }
+    },
+    {
+      "id": 504,
+      "name": "Kẹo sữa",
+      "usda_id": 19127,
+      "usda_desc": "Candies, milk chocolate coated raisins",
+      "filled": {
+        "fiber_g": 3.1
+      }
+    },
+    {
+      "id": 513,
+      "name": "Nước mắm cô",
+      "usda_id": 15089,
+      "usda_desc": "Fish, sardine, Pacific, canned in tomato sauce, drained solids with bone",
+      "filled": {
+        "lipid_g": 10.45
+      }
+    },
+    {
+      "id": 521,
+      "name": "Cốc tain (cồn 13g)",
+      "usda_id": 14029,
+      "usda_desc": "Alcoholic beverage, whiskey sour, prepared from item 14028",
+      "filled": {
+        "lipid_g": 0.06
+      }
+    },
+    {
+      "id": 522,
+      "name": "Coca cola",
+      "usda_id": 14148,
+      "usda_desc": "Beverages, carbonated, cola, regular",
+      "filled": {
+        "lipid_g": 0.25
+      }
+    },
+    {
+      "id": 523,
+      "name": "Nước cam tươi",
+      "usda_id": 9206,
+      "usda_desc": "Orange juice, raw",
+      "filled": {
+        "fiber_g": 0.2
+      }
+    },
+    {
+      "id": 529,
+      "name": "Rượu nếp (80g/24ml) (cồn 5g)",
+      "usda_id": 14057,
+      "usda_desc": "Alcoholic beverage, wine, dessert, sweet",
+      "filled": {
+        "lipid_g": 0.0
+      }
+    },
+    {
+      "id": 530,
+      "name": "Rượu trắng (cồn 39g)",
+      "usda_id": 14532,
+      "usda_desc": "Alcoholic beverage, distilled, all (gin, rum, vodka, whiskey) 94 proof",
+      "filled": {
+        "protein_g": 0.0,
+        "lipid_g": 0.0
+      }
+    },
+    {
+      "id": 531,
+      "name": "Rượu vang đỏ",
+      "usda_id": 14602,
+      "usda_desc": "Alcoholic Beverage, wine, table, red, Merlot",
+      "filled": {
+        "lipid_g": 0.0
+      }
+    },
+    {
+      "id": 534,
+      "name": "Rượu whisky (cồn 35,2g)",
+      "usda_id": 14052,
+      "usda_desc": "Alcoholic beverage, distilled, whiskey, 86 proof",
+      "filled": {
+        "lipid_g": 0.0
+      }
+    },
+    {
+      "id": 535,
+      "name": "Bánh bao chiên có nhân",
+      "usda_id": 10181,
+      "usda_desc": "Pork, fresh, loin, top loin (chops), boneless, separable lean only, cooked, pan-fried",
+      "filled": {
+        "potassium_mg": 390.0,
+        "sodium_mg": 87.0,
+        "magnesium_mg": 26.0
+      }
+    },
+    {
+      "id": 549,
+      "name": "Bánh gai",
+      "usda_id": 22958,
+      "usda_desc": "Rice bowl with chicken, frozen entree, prepared (includes fried, teriyaki, and sweet and sour varieties)",
+      "filled": {
+        "potassium_mg": 123.0,
+        "sodium_mg": 333.0,
+        "magnesium_mg": 14.0
+      }
+    },
+    {
+      "id": 566,
+      "name": "Bánh trôi",
+      "usda_id": 22958,
+      "usda_desc": "Rice bowl with chicken, frozen entree, prepared (includes fried, teriyaki, and sweet and sour varieties)",
+      "filled": {
+        "potassium_mg": 123.0,
+        "sodium_mg": 333.0,
+        "magnesium_mg": 14.0
+      }
+    },
+    {
+      "id": 573,
+      "name": "Bún ốc",
+      "usda_id": 32001,
+      "usda_desc": "Rice and vermicelli mix, beef flavor, prepared with 80% margarine",
+      "filled": {
+        "fiber_g": 0.6
+      }
+    },
+    {
+      "id": 578,
+      "name": "Cháo trai",
+      "usda_id": 6027,
+      "usda_desc": "Soup, clam chowder, manhattan style, canned, chunky, ready-to-serve",
+      "filled": {
+        "potassium_mg": 160.0,
+        "sodium_mg": 417.0,
+        "magnesium_mg": 8.0
+      }
+    }
+  ],
+  "unmatched": [
+    {
+      "id": 11,
+      "name": "Bánh đúc",
+      "queries": [
+        "rice cake, plain",
+        "banh duc"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Bánh quẩy",
+      "queries": [
+        "doughnuts, fried",
+        "chinese cruller"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Cốm",
+      "queries": [
+        "rice, young, green, pounded",
+        "com"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Củ ấu",
+      "queries": [
+        "water chestnut, chinese, raw",
+        "trapa natans"
+      ]
+    },
+    {
+      "id": 29,
+      "name": "Củ súng khô (đã bỏ vỏ)",
+      "queries": [
+        "đã bỏ vỏ",
+        "water lily, dried",
+        "lotus seed, dried"
+      ]
+    },
+    {
+      "id": 43,
+      "name": "Bột sắn",
+      "queries": [
+        "cassava flour",
+        "tapioca flour"
+      ]
+    },
+    {
+      "id": 48,
+      "name": "Sắn khô",
+      "queries": [
+        "cassava, dried",
+        "yuca, dried"
+      ]
+    },
+    {
+      "id": 61,
+      "name": "Hạt dẻ tươi",
+      "queries": [
+        "chestnuts, european, raw",
+        "chestnuts, raw"
+      ]
+    },
+    {
+      "id": 62,
+      "name": "Hạt dẻ khô",
+      "queries": [
+        "chestnuts, european, dried",
+        "chestnuts, dried"
+      ]
+    },
+    {
+      "id": 76,
+      "name": "Đậu phụ nướng",
+      "queries": [
+        "tofu, fried",
+        "tofu, grilled"
+      ]
+    },
+    {
+      "id": 80,
+      "name": "Sữa bột đậu nành",
+      "queries": [
+        "soymilk powder",
+        "soy milk powder"
+      ]
+    },
+    {
+      "id": 83,
+      "name": "Bầu",
+      "queries": [
+        "bottle gourd, raw",
+        "opo squash, raw"
+      ]
+    },
+    {
+      "id": 84,
+      "name": "Bí đao",
+      "queries": [
+        "wax gourd, raw",
+        "ash gourd, raw"
+      ]
+    },
+    {
+      "id": 94,
+      "name": "Cải bắp khô",
+      "queries": [
+        "cabbage, dehydrated",
+        "cabbage, dried"
+      ]
+    },
+    {
+      "id": 97,
+      "name": "Cải thìa",
+      "queries": [
+        "pak-choi, raw",
+        "chinese cabbage, pak-choi, raw"
+      ]
+    },
+    {
+      "id": 100,
+      "name": "Cần tây",
+      "queries": [
+        "celery, raw",
+        "celery stalks, raw"
+      ]
+    },
+    {
+      "id": 106,
+      "name": "Củ niễng",
+      "queries": [
+        "water bamboo, raw",
+        "zizania latifolia, raw"
+      ]
+    },
+    {
+      "id": 116,
+      "name": "Gấc",
+      "queries": [
+        "gac fruit",
+        "momordica cochinchinensis"
+      ]
+    },
+    {
+      "id": 125,
+      "name": "Hoa chuối",
+      "queries": [
+        "banana flower, raw",
+        "banana blossom"
+      ]
+    },
+    {
+      "id": 126,
+      "name": "Hoa lý",
+      "queries": [
+        "telosma cordata, raw",
+        "cowslip creeper flower"
+      ]
+    },
+    {
+      "id": 128,
+      "name": "Lá lốt",
+      "queries": [
+        "piper sarmentosum, raw",
+        "wild betel leaf"
+      ]
+    },
+    {
+      "id": 129,
+      "name": "Lá me",
+      "queries": [
+        "tamarind leaves, raw",
+        "tamarind leaf"
+      ]
+    },
+    {
+      "id": 130,
+      "name": "Lá mơ lông",
+      "queries": [
+        "paederia foetida, raw",
+        "stinkvine leaves"
+      ]
+    },
+    {
+      "id": 133,
+      "name": "Măng khô",
+      "queries": [
+        "bamboo shoots, dried",
+        "dried bamboo shoots"
+      ]
+    },
+    {
+      "id": 139,
+      "name": "Ngải cứu",
+      "queries": [
+        "artemisia vulgaris, raw",
+        "mugwort, raw"
+      ]
+    },
+    {
+      "id": 142,
+      "name": "Nụ mướp",
+      "queries": [
+        "luffa flower, raw",
+        "dishcloth gourd flower"
+      ]
+    },
+    {
+      "id": 146,
+      "name": "Quả dọc",
+      "queries": [
+        "garcinia pedunculata, raw",
+        "elephant fruit"
+      ]
+    },
+    {
+      "id": 147,
+      "name": "Quả me chua",
+      "queries": [
+        "tamarind, raw",
+        "tamarinds, raw"
+      ]
+    },
+    {
+      "id": 157,
+      "name": "Rau húng",
+      "queries": [
+        "spearmint, raw",
+        "mint, raw"
+      ]
+    },
+    {
+      "id": 159,
+      "name": "Rau kinh giới",
+      "queries": [
+        "elsholtzia ciliata, raw",
+        "vietnamese balm"
+      ]
+    },
+    {
+      "id": 160,
+      "name": "Rau má rừng",
+      "queries": [
+        "centella asiatica, raw",
+        "gotu kola, raw"
+      ]
+    },
+    {
+      "id": 161,
+      "name": "Rau má",
+      "queries": [
+        "centella asiatica, raw",
+        "gotu kola, raw"
+      ]
+    },
+    {
+      "id": 164,
+      "name": "Rau mùi tàu",
+      "queries": [
+        "eryngium foetidum, raw",
+        "culantro, raw"
+      ]
+    },
+    {
+      "id": 166,
+      "name": "Rau muống khô",
+      "queries": [
+        "water spinach, dried",
+        "dried swamp cabbage"
+      ]
+    },
+    {
+      "id": 167,
+      "name": "Rau ngổ",
+      "queries": [
+        "limnophila aromatica, raw",
+        "rice paddy herb"
+      ]
+    },
+    {
+      "id": 168,
+      "name": "Rau ngót",
+      "queries": [
+        "sauropus androgynus, raw",
+        "katuk leaves, raw"
+      ]
+    },
+    {
+      "id": 169,
+      "name": "Rau ngót khô",
+      "queries": [
+        "sweet leaf, dehydrated",
+        "star gooseberry, dried"
+      ]
+    },
+    {
+      "id": 170,
+      "name": "Rau răm",
+      "queries": [
+        "laksa leaf, raw",
+        "vietnamese coriander, raw"
+      ]
+    },
+    {
+      "id": 174,
+      "name": "Rau sắng",
+      "queries": [
+        "mellotus, raw",
+        "melientha suavis, raw"
+      ]
+    },
+    {
+      "id": 175,
+      "name": "Rau tàu bay",
+      "queries": [
+        "gynura crepidioides, raw",
+        "wild greens, raw"
+      ]
+    },
+    {
+      "id": 176,
+      "name": "Rau thơm",
+      "queries": [
+        "spearmint, raw",
+        "herbs, mixed, raw"
+      ]
+    },
+    {
+      "id": 177,
+      "name": "Sấu xanh",
+      "queries": [
+        "dracontomelon duperreanum, raw",
+        "hog plum, raw"
+      ]
+    },
+    {
+      "id": 179,
+      "name": "Su hào khô",
+      "queries": [
+        "kohlrabi, dehydrated",
+        "turnip, dried"
+      ]
+    },
+    {
+      "id": 184,
+      "name": "Tía tô",
+      "queries": [
+        "perilla, raw",
+        "beefsteak plant, raw"
+      ]
+    },
+    {
+      "id": 187,
+      "name": "Trám đen chín",
+      "queries": [
+        "canarium commune, cooked",
+        "black olive, cooked"
+      ]
+    },
+    {
+      "id": 188,
+      "name": "Trám xanh sống",
+      "queries": [
+        "canarium commune, raw",
+        "black olive, raw"
+      ]
+    },
+    {
+      "id": 189,
+      "name": "Xương sông",
+      "queries": [
+        "homalomena occulta, raw",
+        "wild leaf, raw"
+      ]
+    },
+    {
+      "id": 202,
+      "name": "Hành củ muối",
+      "queries": [
+        "onions, pickled",
+        "pickled onion"
+      ]
+    },
+    {
+      "id": 203,
+      "name": "Kiệu muối",
+      "queries": [
+        "scallions, pickled",
+        "pickled shallots"
+      ]
+    },
+    {
+      "id": 204,
+      "name": "Nhút",
+      "queries": [
+        "pickled jackfruit",
+        "pickled vegetable salad"
+      ]
+    },
+    {
+      "id": 206,
+      "name": "Men bia tươi",
+      "queries": [
+        "yeast, baker's, active",
+        "yeast, brewer's"
+      ]
+    },
+    {
+      "id": 208,
+      "name": "Nấm hương khô",
+      "queries": [
+        "mushrooms, shiitake, dried",
+        "mushrooms, dried"
+      ]
+    },
+    {
+      "id": 220,
+      "name": "Dâu gia",
+      "queries": [
+        "baccaurea sapida, raw",
+        "rambutan, raw"
+      ]
+    },
+    {
+      "id": 231,
+      "name": "Hồng bì",
+      "queries": [
+        "clausena lansium, raw",
+        "wampi, raw"
+      ]
+    },
+    {
+      "id": 241,
+      "name": "Mít khô",
+      "queries": [
+        "jackfruit, dried",
+        "jackfruit"
+      ]
+    },
+    {
+      "id": 251,
+      "name": "Nhót",
+      "queries": [
+        "eleagnus, raw",
+        "berries"
+      ]
+    },
+    {
+      "id": 256,
+      "name": "Quả thanh long",
+      "queries": [
+        "pitaya, raw",
+        "dragon fruit"
+      ]
+    },
+    {
+      "id": 257,
+      "name": "Quả trứng gà",
+      "queries": [
+        "canistel, raw",
+        "yellow sapote"
+      ]
+    },
+    {
+      "id": 261,
+      "name": "Sấu chín",
+      "queries": [
+        "dacrycarpus, raw",
+        "dracontomelon"
+      ]
+    },
+    {
+      "id": 266,
+      "name": "Vú sữa",
+      "queries": [
+        "star apple, raw",
+        "caimito"
+      ]
+    },
+    {
+      "id": 342,
+      "name": "Tiết lợn sống",
+      "queries": [
+        "pork, blood, raw",
+        "animal blood, raw"
+      ]
+    },
+    {
+      "id": 360,
+      "name": "Bột cóc",
+      "queries": [
+        "hog plum powder",
+        "fruit flour"
+      ]
+    },
+    {
+      "id": 361,
+      "name": "Châu chấu",
+      "queries": [
+        "grasshopper, raw",
+        "insects"
+      ]
+    },
+    {
+      "id": 363,
+      "name": "Nhộng",
+      "queries": [
+        "silkworm pupae, raw",
+        "pupa"
+      ]
+    },
+    {
+      "id": 373,
+      "name": "Chả lá lốt",
+      "queries": [
+        "pork roll with piper lolot leaves",
+        "minced pork wrapped in leaves"
+      ]
+    },
+    {
+      "id": 409,
+      "name": "Hải sâm",
+      "queries": [
+        "sea cucumber, raw",
+        "sea cucumber"
+      ]
+    },
+    {
+      "id": 420,
+      "name": "Rươi",
+      "queries": [
+        "nereidis, raw",
+        "polychaete worms, raw"
+      ]
+    },
+    {
+      "id": 423,
+      "name": "Tép khô",
+      "queries": [
+        "crustaceans, shrimp, dried",
+        "dried shrimp"
+      ]
+    },
+    {
+      "id": 426,
+      "name": "Tôm khô",
+      "queries": [
+        "crustaceans, shrimp, mixed species, dried",
+        "shrimp, dried"
+      ]
+    },
+    {
+      "id": 430,
+      "name": "Bột cá",
+      "queries": [
+        "fish meal, unfortified",
+        "fish powder"
+      ]
+    },
+    {
+      "id": 431,
+      "name": "Ruốc cá quả",
+      "queries": [
+        "fish floss",
+        "dried snakehead fish shredded"
+      ]
+    },
+    {
+      "id": 432,
+      "name": "Ruốc tôm",
+      "queries": [
+        "shrimp floss",
+        "dried shredded shrimp"
+      ]
+    },
+    {
+      "id": 437,
+      "name": "Chả cá basa",
+      "queries": [
+        "basa fish cake",
+        "fish cake"
+      ]
+    },
+    {
+      "id": 461,
+      "name": "Chuối nước đường",
+      "queries": [
+        "bananas in syrup",
+        "canned banana"
+      ]
+    },
+    {
+      "id": 472,
+      "name": "Nhãn nước đường",
+      "queries": [
+        "longans in syrup",
+        "canned longan"
+      ]
+    },
+    {
+      "id": 474,
+      "name": "Vải nước đường",
+      "queries": [
+        "litchis in syrup",
+        "canned lychee"
+      ]
+    },
+    {
+      "id": 509,
+      "name": "Nước mắm cá (loại đặc biệt)",
+      "queries": [
+        "loại đặc biệt",
+        "fish sauce",
+        "sauce, fish"
+      ]
+    },
+    {
+      "id": 514,
+      "name": "Tương ngô",
+      "queries": [
+        "corn sauce",
+        "sauce, corn"
+      ]
+    },
+    {
+      "id": 515,
+      "name": "Tương nếp",
+      "queries": [
+        "rice sauce",
+        "sauce, soy, fermented"
+      ]
+    },
+    {
+      "id": 537,
+      "name": "Bánh bột lọc",
+      "queries": [
+        "tapioca dumpling with pork",
+        "dumplings, shrimp and pork, steamed"
+      ]
+    },
+    {
+      "id": 541,
+      "name": "Bánh chuối",
+      "queries": [
+        "banana fritters",
+        "banana bread"
+      ]
+    },
+    {
+      "id": 544,
+      "name": "Bánh cuốn nóng nhân thịt",
+      "queries": [
+        "rice noodle roll with pork",
+        "rice paper rolls, pork, cooked"
+      ]
+    },
+    {
+      "id": 545,
+      "name": "Bánh dẻo nhân thập cẩm",
+      "queries": [
+        "moon cake, mixed fruit and nut",
+        "moon cake, lotus seed"
+      ]
+    },
+    {
+      "id": 546,
+      "name": "Bánh dẻo nhân trứng",
+      "queries": [
+        "moon cake, egg yolk",
+        "moon cake, mixed filling"
+      ]
+    },
+    {
+      "id": 548,
+      "name": "Bánh đúc nóng",
+      "queries": [
+        "rice flour porridge, hot",
+        "rice congee"
+      ]
+    },
+    {
+      "id": 550,
+      "name": "Bánh gio",
+      "queries": [
+        "ash cake, glutinous rice",
+        "rice cake, alkaline"
+      ]
+    },
+    {
+      "id": 553,
+      "name": "Bánh khoái",
+      "queries": [
+        "crispy rice pancake, pork and shrimp",
+        "pancake, savory"
+      ]
+    },
+    {
+      "id": 554,
+      "name": "Bánh khoai sọ chiên",
+      "queries": [
+        "taro cake, fried",
+        "taro fritters"
+      ]
+    },
+    {
+      "id": 555,
+      "name": "Bánh khúc",
+      "queries": [
+        "glutinous rice dumpling, mung bean and pork",
+        "sticky rice cake"
+      ]
+    },
+    {
+      "id": 556,
+      "name": "Bánh mè",
+      "queries": [
+        "sesame seed cake",
+        "sesame cookies"
+      ]
+    },
+    {
+      "id": 559,
+      "name": "Bánh nếp",
+      "queries": [
+        "glutinous rice cake",
+        "sticky rice cake"
+      ]
+    },
+    {
+      "id": 560,
+      "name": "Bánh nướng nhân thập cẩm",
+      "queries": [
+        "moon cake, mixed nuts and fruit, baked",
+        "baked moon cake"
+      ]
+    },
+    {
+      "id": 561,
+      "name": "Bánh nướng nhân trứng đỗ xanh",
+      "queries": [
+        "moon cake, mung bean with egg yolk",
+        "baked moon cake, bean paste"
+      ]
+    },
+    {
+      "id": 562,
+      "name": "Bánh phu thê (su sê, xu xuê)",
+      "queries": [
+        "su sê, xu xuê",
+        "husband cake, glutinous rice",
+        "sweet rice cake"
+      ]
+    },
+    {
+      "id": 563,
+      "name": "Bánh rán bọc đường",
+      "queries": [
+        "fried rice ball, sugar coated",
+        "doughnut, fried"
+      ]
+    },
+    {
+      "id": 564,
+      "name": "Bánh tẻ",
+      "queries": [
+        "rice cake with pork and mung bean",
+        "glutinous rice packet"
+      ]
+    },
+    {
+      "id": 565,
+      "name": "Bánh tôm",
+      "queries": [
+        "shrimp fritters",
+        "shrimp pastry"
+      ]
+    },
+    {
+      "id": 569,
+      "name": "Bún cua",
+      "queries": [
+        "rice vermicelli with crab soup",
+        "noodles, rice, soup with crab"
+      ]
+    },
+    {
+      "id": 571,
+      "name": "Bún dọc mùng",
+      "queries": [
+        "rice vermicelli with giant alocasia soup",
+        "noodles, rice, soup with vegetable"
+      ]
+    },
+    {
+      "id": 576,
+      "name": "Cháo lòng",
+      "queries": [
+        "rice porridge with pork offal",
+        "congee, pork"
+      ]
+    },
+    {
+      "id": 577,
+      "name": "Cháo sườn",
+      "queries": [
+        "rice porridge with pork ribs",
+        "congee, pork bone"
+      ]
+    },
+    {
+      "id": 579,
+      "name": "Chè bưởi",
+      "queries": [
+        "dessert, pomelo",
+        "sweet soup, pomelo"
+      ]
+    },
+    {
+      "id": 580,
+      "name": "Chè chuối",
+      "queries": [
+        "dessert, banana",
+        "sweet soup, banana"
+      ]
+    },
+    {
+      "id": 581,
+      "name": "Chè cốm",
+      "queries": [
+        "dessert, green rice flake",
+        "sweet soup, young rice"
+      ]
+    },
+    {
+      "id": 582,
+      "name": "Chè đỗ đen",
+      "queries": [
+        "dessert, black bean",
+        "sweet soup, black bean"
+      ]
+    },
+    {
+      "id": 583,
+      "name": "Chè đỗ đỏ",
+      "queries": [
+        "dessert, red bean",
+        "sweet soup, azuki bean"
+      ]
+    },
+    {
+      "id": 585,
+      "name": "Chè hạt sen",
+      "queries": [
+        "dessert, lotus seed",
+        "sweet soup, lotus seed"
+      ]
+    },
+    {
+      "id": 586,
+      "name": "Chè khoai sọ",
+      "queries": [
+        "dessert, taro",
+        "sweet soup, taro"
+      ]
+    },
+    {
+      "id": 588,
+      "name": "Chè sắn",
+      "queries": [
+        "dessert, cassava",
+        "sweet soup, cassava"
+      ]
+    },
+    {
+      "id": 589,
+      "name": "Chè thái",
+      "queries": [
+        "dessert, thai style",
+        "sweet soup, mixed fruit"
+      ]
+    },
+    {
+      "id": 595,
+      "name": "Mỳ xào",
+      "queries": [
+        "noodles, chinese, fried",
+        "chow mein"
+      ]
+    },
+    {
+      "id": 604,
+      "name": "Xôi gấc",
+      "queries": [
+        "glutinous rice, momordica cochinchinensis",
+        "sticky rice, red gac fruit"
+      ]
+    },
+    {
+      "id": 605,
+      "name": "Xôi lạc",
+      "queries": [
+        "glutinous rice with peanut",
+        "sticky rice with peanuts"
+      ]
+    },
+    {
+      "id": 606,
+      "name": "Xôi ngô",
+      "queries": [
+        "glutinous rice with corn",
+        "sticky rice with corn"
+      ]
+    },
+    {
+      "id": 607,
+      "name": "Xôi xéo",
+      "queries": [
+        "glutinous rice with mung bean",
+        "sticky rice with mung bean paste"
+      ]
+    },
+    {
+      "id": 690,
+      "name": "Whey Protein Isolate (bột)",
+      "queries": [
+        "bột",
+        "whey protein isolate powder",
+        "protein supplement, whey, isolate"
+      ]
+    }
+  ]
+}
