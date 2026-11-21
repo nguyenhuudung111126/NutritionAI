@@ -61,10 +61,15 @@ async function request(path, options = {}) {
     if (!res.ok) {
       let msg = `Lỗi HTTP ${res.status}`;
       try {
-        const data = await res.json();
-        msg = data.detail || JSON.stringify(data);
+        const rawText = await res.text();
+        try {
+          const data = JSON.parse(rawText);
+          msg = data.detail || JSON.stringify(data);
+        } catch {
+          if (rawText) msg = rawText.slice(0, 220);
+        }
       } catch {
-        msg = await res.text();
+        // ignore read error
       }
       if (res.status === 401 && !path.startsWith('/auth/login')) {
         setAuthToken('');
