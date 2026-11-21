@@ -1,6 +1,6 @@
 # NutriGuard AI – Trợ lý Dinh dưỡng Lâm sàng Cá nhân hóa
 
-Hệ thống AI Agent hỗ trợ bệnh nhân quản lý dinh dưỡng theo **24 phác đồ Bộ Y tế (QĐ 2879/QĐ-BYT)**, tích hợp **LangGraph**, **RAG (`pgvector`)**, **Gemini Vision OCR** đọc phiếu xét nghiệm đa ảnh và **Clinical Guardrails** tự động kiểm duyệt an toàn thực đơn (hỗ trợ **Đái tháo đường**, **Bệnh thận mạn**, **Gout**, **Tăng huyết áp**, **Rối loạn mỡ máu**, **Suy tim**...).
+Hệ thống AI Agent hỗ trợ bệnh nhân quản lý dinh dưỡng theo **24 phác đồ Bộ Y tế (QĐ 2879/QĐ-BYT)**, tích hợp **LangGraph**, **RAG (`pgvector`)**, **Gemini Vision OCR** đọc phiếu xét nghiệm đa ảnh và **Clinical Guardrails** tự động kiểm duyệt an toàn thực đơn (hỗ trợ **Đái tháo đường**, **Bệnh thận mạn**, , **Tăng huyết áp** (kèm với **Rối loạn mỡ máu**, **Suy tim**...)).
 
 > 🌐 **Bản Demo Online:** [https://nutriguard-ai-api.onrender.com](https://nutriguard-ai-api.onrender.com)  
 > 👤 **Tài khoản dùng thử:** Bệnh nhân (`dung` / `123456`) | Quản trị viên (`admin` / `admin123`)
