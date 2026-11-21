@@ -718,7 +718,10 @@ async def upload_checkup(
             detail=f"Phiếu xét nghiệm này đã được tải lên trước đó (đợt khám #{dup['checkup_id']} ngày {cdate}). Không cần tải lại.",
         )
 
-    rec = extract_medical_record_multi([(raw, mime) for raw, mime, _ in file_items])
+    try:
+        rec = extract_medical_record_multi([(raw, mime) for raw, mime, _ in file_items])
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"AI đọc phiếu thất bại: {exc}")
     combined_names = ", ".join(name for _, _, name in file_items)
     primary_mime = file_items[0][1]
     try:
@@ -732,6 +735,8 @@ async def upload_checkup(
         )
     except DuplicateCheckupError as e:
         raise HTTPException(status_code=409, detail=str(e))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Lỗi lưu đợt khám vào CSDL: {exc}")
     return _to_json_safe({"extracted": rec.model_dump(), "files_count": len(file_items), **res})
 
 

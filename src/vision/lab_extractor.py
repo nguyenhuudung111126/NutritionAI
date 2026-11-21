@@ -1,7 +1,8 @@
 """Đọc ảnh/PDF phiếu khám hoặc kết quả xét nghiệm bằng Gemini Vision + Structured Output."""
 import io
 import json
-from datetime import date
+import re
+from datetime import date, datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 from google.genai import types
@@ -105,6 +106,25 @@ def find_duplicate_document(patient_id: str, file_sha256: str) -> Optional[Dict[
     return dict(row) if row else None
 
 
+def _normalize_iso_date(raw: Optional[str]) -> str:
+    """Chuẩn hóa ngày khám về YYYY-MM-DD, fallback hôm nay nếu AI đọc sai định dạng."""
+    s = str(raw or "").strip()
+    if not s:
+        return date.today().isoformat()
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y", "%Y/%m/%d"):
+        try:
+            return datetime.strptime(s[:10], fmt).date().isoformat()
+        except ValueError:
+            continue
+    m = re.search(r"(\d{1,2})[/-](\d{1,2})[/-](\d{4})", s)
+    if m:
+        try:
+            return date(int(m.group(3)), int(m.group(2)), int(m.group(1))).isoformat()
+        except ValueError:
+            pass
+    return date.today().isoformat()
+
+
 def save_extracted_checkup(
     patient_id: str,
     record: ExtractedMedicalRecord,
@@ -115,7 +135,7 @@ def save_extracted_checkup(
 ) -> Dict[str, Any]:
     """Lưu hoặc gộp đợt khám + chỉ số xét nghiệm vào PostgreSQL (chống trùng theo ngày & giá trị)."""
     safe_json = mask_pii_dict(record.model_dump())
-    check_date = checkup_date_override or record.checkup_date or date.today().isoformat()
+    check_date = _normalize_iso_date(checkup_date_override or record.checkup_date)
 
     with get_conn() as conn:
         biomarkers = conn.execute("SELECT id, code, name, aliases FROM biomarkers;").fetchall()
