@@ -2,6 +2,15 @@ const rawApiUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, ''
 const API_BASE = rawApiUrl ? `${rawApiUrl}/api` : '/api';
 const TOKEN_KEY = 'nutriguard_token';
 
+const _GET_CACHE = new Map();
+const _IN_FLIGHT = new Map();
+const CACHE_TTL_MS = 60_000;
+
+export function clearApiCache() {
+  _GET_CACHE.clear();
+  _IN_FLIGHT.clear();
+}
+
 let unauthorizedHandler = null;
 
 export function setUnauthorizedHandler(fn) {
@@ -17,6 +26,7 @@ export function getAuthToken() {
 }
 
 export function setAuthToken(token) {
+  clearApiCache();
   try {
     if (token) localStorage.setItem(TOKEN_KEY, token);
     else localStorage.removeItem(TOKEN_KEY);
@@ -26,28 +36,57 @@ export function setAuthToken(token) {
 }
 
 async function request(path, options = {}) {
-  const token = getAuthToken();
-  const headers = { ...(options.headers || {}) };
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  const method = (options.method || 'GET').toUpperCase();
+  const isCacheableGet =
+    method === 'GET' && !path.startsWith('/auth/me') && !path.startsWith('/observability') && !path.startsWith('/health');
+
+  if (isCacheableGet) {
+    const cached = _GET_CACHE.get(path);
+    if (cached && Date.now() - cached.ts < CACHE_TTL_MS) {
+      return cached.data;
+    }
+    if (_IN_FLIGHT.has(path)) {
+      return _IN_FLIGHT.get(path);
+    }
   }
 
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
-  if (!res.ok) {
-    let msg = `Lỗi HTTP ${res.status}`;
-    try {
-      const data = await res.json();
-      msg = data.detail || JSON.stringify(data);
-    } catch {
-      msg = await res.text();
+  const runFetch = async () => {
+    const token = getAuthToken();
+    const headers = { ...(options.headers || {}) };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
     }
-    if (res.status === 401 && !path.startsWith('/auth/login')) {
-      setAuthToken('');
-      if (unauthorizedHandler) unauthorizedHandler();
+
+    const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+    if (!res.ok) {
+      let msg = `Lỗi HTTP ${res.status}`;
+      try {
+        const data = await res.json();
+        msg = data.detail || JSON.stringify(data);
+      } catch {
+        msg = await res.text();
+      }
+      if (res.status === 401 && !path.startsWith('/auth/login')) {
+        setAuthToken('');
+        if (unauthorizedHandler) unauthorizedHandler();
+      }
+      throw new Error(msg);
     }
-    throw new Error(msg);
+    const data = await res.json();
+    if (isCacheableGet) {
+      _GET_CACHE.set(path, { data, ts: Date.now() });
+    } else if (method !== 'GET') {
+      clearApiCache();
+    }
+    return data;
+  };
+
+  if (isCacheableGet) {
+    const p = runFetch().finally(() => _IN_FLIGHT.delete(path));
+    _IN_FLIGHT.set(path, p);
+    return p;
   }
-  return res.json();
+  return runFetch();
 }
 
 export const api = {
