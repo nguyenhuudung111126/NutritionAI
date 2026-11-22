@@ -217,12 +217,13 @@ def _node_handle_safety(state: AgentState) -> AgentState:
     prompt = f"""
 Bạn là chuyên gia dinh dưỡng lâm sàng. Hãy trả lời câu hỏi: "{state['user_query']}"
 HỒ SƠ CÁ NHÂN & PHÁC ĐỒ: {_format_patient_summary(ctx, target)}
-SỐ LIỆU MÓN '{food['name']}' (100g): Calo={food['energy_kcal']}, Đạm={food['protein_g']}g, Kali={food['potassium_mg']}mg, Natri={food['sodium_mg']}mg, Phospho={food['phosphorus_mg']}mg, GI={food['gi']}.
+SỐ LIỆU MÓN '{food['name']}' (100g): Calo={_fmt(food.get('energy_kcal'), 'kcal')}, Đạm={_fmt(food.get('protein_g'), 'g')}, Kali={_fmt(food.get('potassium_mg'), 'mg')}, Natri={_fmt(food.get('sodium_mg'), 'mg')}, Phospho={_fmt(food.get('phosphorus_mg'), 'mg')}, GI={food.get('gi') or 'Chưa xác định'}.
 KẾT QUẢ GUARDRAIL: {check['action']} - Lý do: {check['reasons']}
 GỢI Ý THAY THẾ AN TOÀN: {[a['name'] for a in alts]}
 KIẾN THỨC Y KHOA (RAG): {rag_snippets}
 
-Trình bày rõ ràng theo 3 mục: 1. Kết luận (Được ăn / Hạn chế / Không nên), 2. Giải thích dựa trên hồ sơ cá nhân & số liệu thật, 3. Gợi ý món thay thế & cách chế biến.
+Trình bày rõ ràng theo 3 mục: 1. Kết luận (Được ăn / Hạn chế / Không nên), 2. Giải thích dựa trên hồ sơ cá nhân & số liệu thật (nếu chỉ số nào ghi "Chưa có số liệu" thì nói rõ là chưa có dữ liệu đo chứ không suy đoán bằng 0), 3. Gợi ý món thay thế & cách chế biến.
+Lưu ý: Không dùng ký hiệu LaTeX như $\\le$, $\\ge$ (hãy viết thẳng ký hiệu ≤, ≥).
 """
     try:
         with trace_step("llm_safety_answer", as_type="generation") as gen_span:
@@ -311,6 +312,7 @@ def _node_handle_general(state: AgentState) -> AgentState:
             f"Bạn là chuyên gia dinh dưỡng lâm sàng.\n"
             f"HỒ SƠ BỆNH NHÂN & PHÁC ĐỒ: {_format_patient_summary(ctx, target)}\n"
             f"TÀI LIỆU Y KHOA (RAG): {rag_snippets}\n"
+            f"Không dùng ký hiệu LaTeX ($\\le$, $\\ge$), hãy dùng trực tiếp ký hiệu ≤, ≥.\n"
             f"Câu hỏi: {state['user_query']}",
             fast=True,
         )

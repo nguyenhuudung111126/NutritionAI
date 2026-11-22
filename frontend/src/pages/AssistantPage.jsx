@@ -9,6 +9,126 @@ const QUICK_PROMPTS = [
   'Cách luộc rau để giảm Kali cho người bệnh thận?',
 ];
 
+function cleanMathAndSymbols(raw) {
+  return String(raw || '')
+    .replace(/\r\n/g, '\n')
+    .replace(/\$\s*\\le\s*([^$]*)\$/g, '≤ $1')
+    .replace(/\$\s*\\ge\s*([^$]*)\$/g, '≥ $1')
+    .replace(/\$([^$\n]{1,30})\$/g, (_, inner) =>
+      inner
+        .replace(/\\le\b/g, '≤')
+        .replace(/\\ge\b/g, '≥')
+        .replace(/\\approx\b/g, '≈')
+        .replace(/\\times\b/g, '×')
+        .replace(/\\to\b/g, '→')
+        .trim()
+    )
+    .replace(/\\le\b/g, '≤')
+    .replace(/\\ge\b/g, '≥')
+    .replace(/\\approx\b/g, '≈')
+    .replace(/\\to\b/g, '→');
+}
+
+function renderInlineMarkdown(text) {
+  const tokens = [];
+  const regex = /(\*\*[^*]+\*\*|`[^`]+`|\*[^*\n]+\*)/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      tokens.push(text.slice(lastIndex, match.index));
+    }
+    const seg = match[0];
+    if (seg.startsWith('**') && seg.endsWith('**')) {
+      tokens.push(
+        <strong key={match.index} className="font-bold text-slate-900">
+          {seg.slice(2, -2)}
+        </strong>
+      );
+    } else if (seg.startsWith('`') && seg.endsWith('`')) {
+      tokens.push(
+        <code key={match.index} className="rounded bg-slate-200/70 px-1.5 py-0.5 text-[12px] font-semibold text-slate-800">
+          {seg.slice(1, -1)}
+        </code>
+      );
+    } else if (seg.startsWith('*') && seg.endsWith('*')) {
+      tokens.push(
+        <em key={match.index} className="italic text-slate-700">
+          {seg.slice(1, -1)}
+        </em>
+      );
+    }
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < text.length) {
+    tokens.push(text.slice(lastIndex));
+  }
+  return tokens;
+}
+
+function FormattedAssistantMessage({ text }) {
+  const cleaned = cleanMathAndSymbols(text);
+  const lines = cleaned.split('\n');
+
+  return (
+    <div className="space-y-1.5 text-sm leading-relaxed text-slate-800">
+      {lines.map((rawLine, idx) => {
+        const line = rawLine.trim();
+        if (!line) {
+          return <div key={idx} className="h-1" />;
+        }
+
+        // Headings (###, ##, #) -> strip # symbols and style nicely
+        const headingMatch = line.match(/^(#{1,4})\s+(.+)$/);
+        if (headingMatch) {
+          const level = headingMatch[1].length;
+          const content = headingMatch[2].replace(/\*\*/g, '');
+          return (
+            <div
+              key={idx}
+              className={`pt-2 font-extrabold text-slate-900 ${
+                level <= 2 ? 'text-[15px]' : 'text-sm text-sky-900'
+              }`}
+            >
+              {content}
+            </div>
+          );
+        }
+
+        // Bullet list (- item or * item) -> clean rounded dot bullet, indented
+        const bulletMatch = rawLine.match(/^(\s*)[*-]\s+(.+)$/);
+        if (bulletMatch) {
+          const indentLevel = Math.min(2, Math.floor((bulletMatch[1]?.length || 0) / 2));
+          return (
+            <div
+              key={idx}
+              className="flex items-start gap-2"
+              style={{ paddingLeft: `${indentLevel * 16 + 4}px` }}
+            >
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500" />
+              <div className="flex-1">{renderInlineMarkdown(bulletMatch[2])}</div>
+            </div>
+          );
+        }
+
+        // Numbered list (1. item)
+        const numMatch = rawLine.match(/^(\s*)(\d+)\.\s+(.+)$/);
+        if (numMatch) {
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-1">
+              <span className="min-w-[18px] font-bold text-sky-700">{numMatch[2]}.</span>
+              <div className="flex-1">{renderInlineMarkdown(numMatch[3])}</div>
+            </div>
+          );
+        }
+
+        return <p key={idx}>{renderInlineMarkdown(line)}</p>;
+      })}
+    </div>
+  );
+}
+
 export default function AssistantPage({ patientId, patientName }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -81,7 +201,11 @@ export default function AssistantPage({ patientId, patientName }) {
                     : 'border border-sky-100 bg-sky-50/35 text-slate-800'
                 }`}
               >
-                <div className="whitespace-pre-wrap">{m.content}</div>
+                {m.role === 'user' ? (
+                  <div className="whitespace-pre-wrap">{m.content}</div>
+                ) : (
+                  <FormattedAssistantMessage text={m.content} />
+                )}
 
                 {m.meta && (
                   <div className="mt-3 space-y-2 border-t border-slate-200/80 pt-2.5 text-[11px]">
