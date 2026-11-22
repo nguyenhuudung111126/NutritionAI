@@ -21,9 +21,8 @@ _RETRY_DELAY_RE = re.compile(r"retry(?: in|Delay['\":\s]+)\s*(\d+(?:\.\d+)?)\s*s
 DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 FALLBACK_MODELS = [
     DEFAULT_MODEL,
-    "gemini-3-flash-preview",
     "gemini-3.1-flash-lite-preview",
-    "gemini-3.1-flash-lite",
+    "gemini-3-flash-preview",
     "gemini-3.8-flash",
 ]
 EMBED_MODEL = "gemini-embedding-001"
@@ -125,12 +124,17 @@ def _call_with_fallback(fn: Callable[[genai.Client, str], Any], timeout_ms: int 
     raise RuntimeError("Không gọi được Gemini API: " + " | ".join(errors))
 
 
+def _supports_zero_thinking(model_name: str) -> bool:
+    """Chỉ tắt thinking_budget=0 với các model hỗ trợ và thực sự nhanh hơn khi tắt."""
+    return "3-flash" in model_name or "3.8" in model_name or "2.5-flash" in model_name
+
+
 def generate_text(contents: Any, fast: bool = False) -> tuple[str, str]:
     """Sinh văn bản kèm fallback qua các model khả dụng. Trả về (text, model_used)."""
     def _run(client: genai.Client, model_name: str):
         cfg: Optional[types.GenerateContentConfig] = (
             types.GenerateContentConfig(thinking_config=types.ThinkingConfig(thinking_budget=0))
-            if fast and "3.8" in model_name
+            if fast and _supports_zero_thinking(model_name)
             else None
         )
         res = client.models.generate_content(model=model_name, contents=contents, config=cfg)
@@ -147,7 +151,7 @@ def generate_structured(contents: Any, schema: Type[T], fast: bool = False) -> t
             "response_mime_type": "application/json",
             "response_schema": schema,
         }
-        if fast and "3.8" in model_name:
+        if fast and _supports_zero_thinking(model_name):
             cfg_kwargs["thinking_config"] = types.ThinkingConfig(thinking_budget=0)
         res = client.models.generate_content(
             model=model_name,
@@ -157,7 +161,7 @@ def generate_structured(contents: Any, schema: Type[T], fast: bool = False) -> t
         _record_usage(res, model_name)
         return schema.model_validate_json(res.text)
 
-    return _call_with_fallback(_run, timeout_ms=35_000)
+    return _call_with_fallback(_run, timeout_ms=25_000)
 
 
 _QUERY_EMBED_CFG = types.EmbedContentConfig(

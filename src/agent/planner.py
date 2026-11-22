@@ -232,6 +232,7 @@ def generate_meal_plan(
     safe_preferences = mask_pii_text(user_preferences)
     log_pii_redaction(run_id, "user_preferences", user_preferences, safe_preferences)
 
+    pool_limit = 64 if gen_days <= 1 else (80 if gen_days <= 3 else 96)
     with trace_step("tool_get_safe_foods", as_type="tool", input_data={"patient_id": patient_id, "period": period}):
         safe_foods = get_safe_foods(
             patient_id=patient_id,
@@ -239,24 +240,19 @@ def generate_meal_plan(
             max_sodium_mg=400 if target.get("sodium_max_mg") else None,
             max_phosphorus_mg=300 if target.get("phosphate_max_mg") else None,
             require_low_gi=target.get("require_low_gi", False),
-            limit=96,
+            limit=pool_limit,
             prefer_query=safe_preferences,
         )
     recent_foods = _get_recent_plan_foods(patient_id, limit=12)
     food_map = {f["id"]: f for f in safe_foods}
 
-    foods_brief = [
-        {
-            "id": f["id"], "name": f["name"],
-            "kcal": float(f["energy_kcal"] or 0),
-            "p": float(f["protein_g"] or 0),
-            "k": float(f["potassium_mg"] or 0),
-            "na": float(f["sodium_mg"] or 0),
-            "ph": float(f["phosphorus_mg"] or 0),
-            "gi": f["gi"],
-        }
+    # Bảng thu gọn (tiết kiệm ~65% token so với JSON đầy đủ -> AI lập thực đơn nhanh gấp ~2-3 lần)
+    foods_table = "id|ten|kcal|p_g|k_mg|na_mg|ph_mg|gi\n" + "\n".join(
+        f"{f['id']}|{f['name']}|{round(float(f['energy_kcal'] or 0))}|"
+        f"{round(float(f['protein_g'] or 0), 1)}|{round(float(f['potassium_mg'] or 0))}|"
+        f"{round(float(f['sodium_mg'] or 0))}|{round(float(f['phosphorus_mg'] or 0))}|{f['gi'] or ''}"
         for f in safe_foods
-    ]
+    )
 
     profile_block = ""
     if patient_profile:
@@ -329,8 +325,8 @@ MỤC TIÊU DINH DƯỠNG MỖI NGÀY (RÀNG BUỘC CỨNG Y KHOA):
 - Lưu ý lâm sàng: {target.get('notes', '')}
 {rag_block}{diversity_block}{pref_block}{feedback}
 
-DANH SÁCH NGUYÊN LIỆU AN TOÀN (trên 100g, `ph`=Phospho mg):
-{json.dumps(foods_brief, ensure_ascii=False)}
+DANH SÁCH NGUYÊN LIỆU AN TOÀN (trên 100g, dùng đúng cột `id`):
+{foods_table}
 """
         with trace_step(f"llm_meal_plan_attempt_{attempt + 1}", as_type="generation", input_data={"period": period, "attempt": attempt + 1}) as gen_span:
             plan, used_model = generate_structured(prompt, MealPlanOutput, fast=True)

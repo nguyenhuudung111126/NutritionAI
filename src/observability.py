@@ -5,6 +5,7 @@
 """
 import json
 import os
+import threading
 import time
 import uuid
 from contextlib import contextmanager
@@ -282,7 +283,8 @@ def trace_agent_run(
     finally:
         if client is not None:
             try:
-                client.flush()
+                # Đẩy trace Langfuse ngầm để không chặn phản hồi HTTP ~5-7s của người dùng
+                threading.Thread(target=client.flush, daemon=True).start()
             except Exception:
                 pass
 

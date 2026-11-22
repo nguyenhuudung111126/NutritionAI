@@ -1,6 +1,7 @@
 """LangGraph Workflow Agent thống nhất điều phối toàn bộ luồng Hỏi đáp, Thẩm định an toàn & Lập thực đơn,
 tích hợp PII Guardrail, Hồ sơ cá nhân hóa, RAG pgvector, Self-Correction Loop và Observability."""
 from datetime import date
+from functools import lru_cache
 from typing import Any, Dict, Optional, Union
 
 from langgraph.graph import END, START, StateGraph
@@ -345,8 +346,9 @@ def _pick_branch(state: AgentState) -> str:
     return state.get("intent", "GENERAL")
 
 
+@lru_cache(maxsize=1)
 def build_graph():
-    """Xây dựng đồ thị LangGraph thống nhất cho toàn bộ hệ thống."""
+    """Xây dựng và cache đồ thị LangGraph thống nhất cho toàn bộ hệ thống."""
     g = StateGraph(AgentState)
     g.add_node("input_guardrail", _node_input_guardrail)
     g.add_node("load_context", _node_load_context)
