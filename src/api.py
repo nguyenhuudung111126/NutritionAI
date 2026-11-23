@@ -15,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from evals.test_safety import run_evals
-from src.agent.graph import run_agent
+from src.agent.graph import build_graph, run_agent
 from src.auth import (
     authenticate_user,
     create_access_token,
@@ -30,7 +30,7 @@ from src.db import get_conn
 from src.guardrails.clinical_validator import classify_food_with_rules
 from src.llm import warmup_gemini_client
 from src.logging_setup import get_logger, read_recent_logs, request_id_var
-from src.observability import compute_agent_metrics, has_langfuse_config
+from src.observability import compute_agent_metrics, has_langfuse_config, warmup_langfuse
 from src.rag.ingest import (
     delete_knowledge_document,
     ingest_pdf_bytes,
@@ -64,7 +64,15 @@ http_log = get_logger("http")
 
 @app.on_event("startup")
 def _warmup_on_startup():
-    threading.Thread(target=warmup_gemini_client, daemon=True).start()
+    def _bg():
+        try:
+            build_graph()
+        except Exception:
+            pass
+        warmup_langfuse()
+        warmup_gemini_client()
+
+    threading.Thread(target=_bg, daemon=True).start()
 
 
 @app.middleware("http")
@@ -577,56 +585,86 @@ def list_meal_plans(
             (patient_id,),
         ).fetchall()
 
-        detailed_plans = []
-        for p in plans:
-            days = conn.execute(
-                "SELECT id, day_index, plan_date FROM meal_plan_days WHERE meal_plan_id = %s ORDER BY day_index;",
-                (p["id"],),
-            ).fetchall()
-            day_items = []
-            for d in days:
-                meals = conn.execute(
-                    "SELECT id, meal FROM meals WHERE plan_day_id = %s ORDER BY id;", (d["id"],)
-                ).fetchall()
-                meals_out = []
-                totals = {"energy_kcal": 0.0, "protein_g": 0.0, "lipid_g": 0.0, "glucid_g": 0.0, "fiber_g": 0.0, "potassium_mg": 0.0, "sodium_mg": 0.0}
-                for m in meals:
-                    dishes = conn.execute(
-                        "SELECT id, name, cooking_method FROM dishes WHERE meal_id = %s ORDER BY sort_order, id;",
-                        (m["id"],),
-                    ).fetchall()
-                    dishes_out = []
-                    for dish in dishes:
-                        ings = conn.execute(
-                            """
-                            SELECT di.food_id, di.grams, f.name, f.energy_kcal, f.protein_g, f.lipid_g, f.glucid_g, f.fiber_g, f.potassium_mg, f.sodium_mg
-                            FROM dish_ingredients di
-                            JOIN foods f ON f.id = di.food_id
-                            WHERE di.dish_id = %s;
-                            """,
-                            (dish["id"],),
-                        ).fetchall()
-                        for ing in ings:
-                            ratio = float(ing["grams"]) / 100.0
-                            for k in totals:
-                                if ing[k] is not None:
-                                    totals[k] += float(ing[k]) * ratio
-                        dishes_out.append({
-                            "name": dish["name"],
-                            "cooking_method": dish["cooking_method"],
-                            "ingredients": [
-                                {"food_id": i["food_id"], "name": i["name"], "grams": float(i["grams"])}
-                                for i in ings
-                            ],
-                        })
-                    meals_out.append({"meal": m["meal"], "dishes": dishes_out})
-                day_items.append({
-                    "day_index": d["day_index"],
-                    "plan_date": d["plan_date"],
-                    "totals": {k: round(v, 1) for k, v in totals.items()},
-                    "meals": meals_out,
-                })
-            detailed_plans.append({**p, "days": day_items})
+        if not plans:
+            return []
+
+        plan_ids = [p["id"] for p in plans]
+        rows = conn.execute(
+            """
+            SELECT
+                d.meal_plan_id, d.id AS day_id, d.day_index, d.plan_date,
+                m.id AS meal_id, m.meal,
+                dish.id AS dish_id, dish.name AS dish_name, dish.cooking_method,
+                di.food_id, di.grams,
+                f.name AS food_name, f.energy_kcal, f.protein_g, f.lipid_g, f.glucid_g,
+                f.fiber_g, f.potassium_mg, f.sodium_mg
+            FROM meal_plan_days d
+            LEFT JOIN meals m ON m.plan_day_id = d.id
+            LEFT JOIN dishes dish ON dish.meal_id = m.id
+            LEFT JOIN dish_ingredients di ON di.dish_id = dish.id
+            LEFT JOIN foods f ON f.id = di.food_id
+            WHERE d.meal_plan_id = ANY(%s)
+            ORDER BY d.meal_plan_id DESC, d.day_index ASC, m.id ASC, dish.sort_order ASC, dish.id ASC, di.id ASC;
+            """,
+            (plan_ids,),
+        ).fetchall()
+
+    nutrient_keys = ("energy_kcal", "protein_g", "lipid_g", "glucid_g", "fiber_g", "potassium_mg", "sodium_mg")
+    days_by_plan: Dict[int, Dict[int, Dict[str, Any]]] = {}
+    for r in rows:
+        pid_key = r["meal_plan_id"]
+        day_id = r["day_id"]
+        plan_days = days_by_plan.setdefault(pid_key, {})
+        if day_id not in plan_days:
+            plan_days[day_id] = {
+                "day_index": r["day_index"],
+                "plan_date": r["plan_date"],
+                "totals": {k: 0.0 for k in nutrient_keys},
+                "_meals": {},
+            }
+        day_obj = plan_days[day_id]
+        meal_id = r["meal_id"]
+        if meal_id is None:
+            continue
+        if meal_id not in day_obj["_meals"]:
+            day_obj["_meals"][meal_id] = {"meal": r["meal"], "_dishes": {}}
+        meal_obj = day_obj["_meals"][meal_id]
+        dish_id = r["dish_id"]
+        if dish_id is None:
+            continue
+        if dish_id not in meal_obj["_dishes"]:
+            meal_obj["_dishes"][dish_id] = {
+                "name": r["dish_name"],
+                "cooking_method": r["cooking_method"],
+                "ingredients": [],
+            }
+        if r["food_id"] is not None:
+            grams = float(r["grams"])
+            ratio = grams / 100.0
+            for k in nutrient_keys:
+                if r[k] is not None:
+                    day_obj["totals"][k] += float(r[k]) * ratio
+            meal_obj["_dishes"][dish_id]["ingredients"].append({
+                "food_id": r["food_id"],
+                "name": r["food_name"],
+                "grams": grams,
+            })
+
+    detailed_plans = []
+    for p in plans:
+        day_items = []
+        for day_obj in days_by_plan.get(p["id"], {}).values():
+            meals_out = [
+                {"meal": m_obj["meal"], "dishes": list(m_obj["_dishes"].values())}
+                for m_obj in day_obj["_meals"].values()
+            ]
+            day_items.append({
+                "day_index": day_obj["day_index"],
+                "plan_date": day_obj["plan_date"],
+                "totals": {k: round(v, 1) for k, v in day_obj["totals"].items()},
+                "meals": meals_out,
+            })
+        detailed_plans.append({**p, "days": day_items})
 
     return _to_json_safe(detailed_plans)
 
@@ -639,15 +677,24 @@ def create_meal_plan(
 ):
     verify_patient_access(patient_id, current_user)
     period_code = "DAY" if payload.num_days == 1 else "WEEK"
-    out = run_agent(
-        patient_id=patient_id,
-        user_query=payload.user_preferences,
-        forced_intent="MEAL_PLANNING",
-        period=period_code,
-        user_preferences=payload.user_preferences,
-        num_days=payload.num_days,
-        meals_per_day=payload.meals_per_day,
-    )
+    try:
+        out = run_agent(
+            patient_id=patient_id,
+            user_query=payload.user_preferences,
+            forced_intent="MEAL_PLANNING",
+            period=period_code,
+            user_preferences=payload.user_preferences,
+            num_days=payload.num_days,
+            meals_per_day=payload.meals_per_day,
+        )
+    except RuntimeError as exc:
+        msg = str(exc)
+        if "503" in msg or "429" in msg or "Gemini API" in msg:
+            raise HTTPException(
+                status_code=503,
+                detail="Máy chủ Google Gemini đang quá tải tạm thời. Bạn vui lòng bấm thử lại sau vài giây nhé.",
+            ) from exc
+        raise HTTPException(status_code=500, detail=msg) from exc
     return _to_json_safe(out.get("draft_plan") or {})
 
 
@@ -658,7 +705,16 @@ def chat_with_agent(
     current_user: Dict[str, Any] = Depends(get_current_user),
 ):
     verify_patient_access(patient_id, current_user)
-    out = run_agent(patient_id=patient_id, user_query=payload.query)
+    try:
+        out = run_agent(patient_id=patient_id, user_query=payload.query)
+    except RuntimeError as exc:
+        msg = str(exc)
+        if "503" in msg or "429" in msg or "Gemini API" in msg:
+            raise HTTPException(
+                status_code=503,
+                detail="Máy chủ Google Gemini đang quá tải tạm thời. Bạn vui lòng gửi lại sau vài giây nhé.",
+            ) from exc
+        raise HTTPException(status_code=500, detail=msg) from exc
     return _to_json_safe({
         "final_response": out.get("final_response", ""),
         "intent": out.get("intent"),

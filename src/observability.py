@@ -266,20 +266,39 @@ def trace_agent_run(
         return
 
     client = None
+    cm = None
+    span = None
     try:
         from langfuse import get_client
 
         client = get_client()
-        with client.start_as_current_observation(
+        cm = client.start_as_current_observation(
             trace_context={"trace_id": trace_id},
             name=name,
             as_type="agent",
             input=input_data,
             metadata=metadata,
-        ) as span:
-            yield span
+        )
+        span = cm.__enter__()
     except Exception:
-        yield None
+        cm = None
+        span = None
+
+    try:
+        yield span
+    except BaseException as exc:
+        if cm is not None:
+            try:
+                cm.__exit__(type(exc), exc, exc.__traceback__)
+            except Exception:
+                pass
+        raise
+    else:
+        if cm is not None:
+            try:
+                cm.__exit__(None, None, None)
+            except Exception:
+                pass
     finally:
         if client is not None:
             try:
@@ -293,22 +312,38 @@ def trace_agent_run(
 def trace_step(name: str, as_type: str = "span", input_data: Any = None) -> Iterator[Any]:
     """Mở span con (đo thời gian local vào `span_timings` + đẩy lên Langfuse nếu đang bật)."""
     t0 = time.perf_counter()
-    try:
-        if not has_langfuse_config():
-            yield None
-            return
+    cm = None
+    span = None
+    if has_langfuse_config():
         try:
             from langfuse import get_client
 
             client = get_client()
-            with client.start_as_current_observation(
+            cm = client.start_as_current_observation(
                 name=name,
                 as_type=as_type,  # type: ignore[arg-type]
                 input=input_data,
-            ) as span:
-                yield span
+            )
+            span = cm.__enter__()
         except Exception:
-            yield None
+            cm = None
+            span = None
+
+    try:
+        yield span
+    except BaseException as exc:
+        if cm is not None:
+            try:
+                cm.__exit__(type(exc), exc, exc.__traceback__)
+            except Exception:
+                pass
+        raise
+    else:
+        if cm is not None:
+            try:
+                cm.__exit__(None, None, None)
+            except Exception:
+                pass
     finally:
         spans = _SPAN_LIST_CTX.get()
         if spans is not None:
@@ -326,3 +361,19 @@ def get_langgraph_callbacks() -> List[Any]:
         return [CallbackHandler()]
     except Exception:
         return []
+
+
+def warmup_langfuse() -> bool:
+    """Nạp sẵn Langfuse SDK + OpenTelemetry CallbackHandler ở luồng nền khi server khởi động
+    để lượt gọi AI đầu tiên không bị trễ ~4-5s import thư viện."""
+    if not has_langfuse_config():
+        return False
+    try:
+        from langfuse import get_client
+        from langfuse.langchain import CallbackHandler
+
+        get_client()
+        CallbackHandler()
+        return True
+    except Exception:
+        return False

@@ -23,7 +23,7 @@ from src.observability import (
     trace_step,
 )
 from src.rag.ingest import search_knowledge
-from src.tools.food_tool import find_alternatives, search_food
+from src.tools.food_tool import find_alternatives, get_category_key, search_category_foods, search_food
 from src.tools.regime_tool import get_patient_context, match_and_compute_target
 
 
@@ -175,6 +175,72 @@ def _node_handle_safety(state: AgentState) -> AgentState:
     except Exception:
         pass
 
+    # Nếu người dùng hỏi chung về 1 nhóm thực phẩm (VD: "cá", "thịt", "rau", "trái cây", "hải sản")
+    cat_key = get_category_key(state.get("food_name") or "")
+    if cat_key:
+        cat_foods = search_category_foods(cat_key, limit=18)
+        if cat_foods:
+            safe_items, warn_items, block_items = [], [], []
+            with trace_step("guardrail_category_safety", as_type="guardrail", input_data={"category": cat_key, "count": len(cat_foods)}) as g_span:
+                for cf in cat_foods:
+                    c_res = validate_food_for_patient(pid, cf, run_id=None)
+                    item_brief = f"{cf['name']} (Đạm {_fmt(cf.get('protein_g'), 'g')}, Kali {_fmt(cf.get('potassium_mg'), 'mg')}, Phospho {_fmt(cf.get('phosphorus_mg'), 'mg')})"
+                    if c_res["action"] == "PASS":
+                        safe_items.append((cf, item_brief))
+                    elif c_res["action"] == "WARN":
+                        warn_items.append((cf, item_brief, c_res["reasons"]))
+                    else:
+                        block_items.append((cf, item_brief, c_res["reasons"]))
+                if g_span is not None:
+                    g_span.update(output={"pass": len(safe_items), "warn": len(warn_items), "block": len(block_items)})
+
+            overall_pass = len(safe_items) > 0 and len(block_items) == 0
+            alt_objs = [x[0] for x in safe_items[:3]]
+            if not has_api_key():
+                safe_names = ", ".join(x[0]["name"] for x in safe_items[:4]) or "chưa có"
+                warn_names = ", ".join(x[0]["name"] for x in warn_items[:4]) or "không có"
+                return {
+                    **state,
+                    "rag_context": rag_snippets,
+                    "safe_alternatives": alt_objs,
+                    "guardrail_passed": overall_pass,
+                    "model_used": "guardrail-deterministic",
+                    "final_response": f"Về nhóm **{state.get('food_name')}** (phác đồ {target['regime_code']}):\n- **Nên ưu tiên (An toàn):** {safe_names}\n- **Cần hạn chế:** {warn_names}",
+                }
+
+            cat_prompt = f"""
+Bạn là chuyên gia dinh dưỡng lâm sàng. Người dùng đang hỏi CHUNG về nhóm thực phẩm "{state.get('food_name')}": "{state['user_query']}"
+(KHÔNG được tự gán rằng người dùng đang hỏi 1 món lẻ duy nhất như "cá mè").
+
+HỒ SƠ CÁ NHÂN & PHÁC ĐỒ: {_format_patient_summary(ctx, target)}
+DỮ LIỆU THẬT TỪ CSDL CHO NHÓM '{state.get('food_name')}':
+- Các loại AN TOÀN / NÊN ƯU TIÊN ({len(safe_items)} loại): {[x[1] for x in safe_items[:5]]}
+- Các loại CẦN HẠN CHẾ / ĂN ÍT ({len(warn_items)} loại): {[f"{x[1]} -> {'; '.join(x[2][:1])}" for x in warn_items[:4]]}
+- Các loại CẤM / TRÁNH ({len(block_items)} loại): {[f"{x[1]} -> {'; '.join(x[2][:1])}" for x in block_items[:4]]}
+KIẾN THỨC Y KHOA (RAG): {rag_snippets}
+
+Trình bày rõ ràng, súc tích theo 3 mục:
+1. Kết luận chung cho nhóm '{state.get('food_name')}' (Được ăn có chọn lọc / Cần hạn chế / Không nên).
+2. Nên ưu tiên loại nào & cần hạn chế loại nào (dẫn số liệu thật từ danh sách trên).
+3. Khẩu phần & cách chế biến an toàn theo phác đồ.
+Lưu ý: Không dùng ký hiệu LaTeX như $\\le$, $\\ge$ (hãy viết thẳng ≤, ≥).
+"""
+            try:
+                with trace_step("llm_safety_category_answer", as_type="generation") as gen_span:
+                    ans, model_used = generate_text(cat_prompt, fast=True)
+                    if gen_span is not None:
+                        gen_span.update(output={"model": model_used})
+                return {
+                    **state,
+                    "rag_context": rag_snippets,
+                    "safe_alternatives": alt_objs,
+                    "guardrail_passed": overall_pass,
+                    "model_used": model_used,
+                    "final_response": ans,
+                }
+            except Exception:
+                pass
+
     if not foods:
         return {
             **state,
@@ -196,6 +262,7 @@ def _node_handle_safety(state: AgentState) -> AgentState:
             max_potassium_mg=200 if target.get("potassium_max_mg") else None,
             require_low_gi=target.get("require_low_gi", False),
             limit=3,
+            source_food=food,
         )
 
     def _deterministic_reply() -> Dict[str, Any]:
@@ -244,6 +311,11 @@ Lưu ý: Không dùng ký hiệu LaTeX như $\\le$, $\\ge$ (hãy viết thẳng 
     }
 
 
+@lru_cache(maxsize=64)
+def _cached_meal_rag(rag_query: str) -> tuple[str, ...]:
+    return tuple(r["content"] for r in search_knowledge(rag_query, top_k=2))
+
+
 def _node_handle_meal_plan(state: AgentState) -> AgentState:
     """Nhánh 3 (MEAL_PLANNING): Lập thực đơn từ Hồ sơ cá nhân + Phác đồ + RAG + Vòng lặp Guardrail tự sửa."""
     pid = state["patient_id"]
@@ -260,7 +332,7 @@ def _node_handle_meal_plan(state: AgentState) -> AgentState:
     try:
         rag_query = f"Nguyên tắc thực đơn và chế biến cho {target.get('regime_name')} {' '.join(ctx.get('conditions', []))}"
         with trace_step("rag_meal_guidelines", as_type="retriever", input_data={"query": rag_query}) as r_span:
-            rag_snippets = [r["content"] for r in search_knowledge(rag_query, top_k=2)]
+            rag_snippets = list(_cached_meal_rag(rag_query))
             if r_span is not None:
                 r_span.update(output={"hits": len(rag_snippets)})
     except Exception:

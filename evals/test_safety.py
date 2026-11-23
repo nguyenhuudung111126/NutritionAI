@@ -559,7 +559,7 @@ def run_evals(include_e2e: bool = True, full_all_cases: bool = False) -> Dict[st
             elif key == "agent_safety_alt_for_rau_ngot":
                 foods = search_food("Rau ngót", limit=1)
                 chk = validate_food_for_patient(EVAL_PATIENT_ID, foods[0]) if foods else {"action": "MISS"}
-                alts = find_alternatives(EVAL_PATIENT_ID, max_potassium_mg=200, require_low_gi=True, limit=3)
+                alts = find_alternatives(EVAL_PATIENT_ID, max_potassium_mg=200, require_low_gi=True, limit=3, source_food=foods[0] if foods else None)
                 passed = chk["action"] in ("WARN", "BLOCK") and len(alts) >= 1
                 output = {"food": "Rau ngót", "action": chk["action"], "alternatives": [a["name"] for a in alts]}
                 metrics = {"tool_selection": 1.0, "task_completion": 1.0 if passed else 0.0}

@@ -21,7 +21,9 @@ _RETRY_DELAY_RE = re.compile(r"retry(?: in|Delay['\":\s]+)\s*(\d+(?:\.\d+)?)\s*s
 DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 FALLBACK_MODELS = [
     DEFAULT_MODEL,
+    "gemini-flash-lite-latest",
     "gemini-3.1-flash-lite-preview",
+    "gemini-flash-latest",
     "gemini-3-flash-preview",
     "gemini-3.8-flash",
 ]
@@ -101,7 +103,11 @@ def get_client(timeout_ms: int = 25_000) -> genai.Client:
         if client is None:
             client = genai.Client(
                 api_key=key,
-                http_options=types.HttpOptions(timeout=timeout_ms, api_version="v1beta"),
+                http_options=types.HttpOptions(
+                    timeout=timeout_ms,
+                    api_version="v1beta",
+                    retry_options=types.HttpRetryOptions(attempts=1),
+                ),
             )
             _CLIENT_CACHE[cache_key] = client
         return client

@@ -7,6 +7,7 @@ export default function MealPlanPage({ patientId, overview }) {
   const [mealsPerDay, setMealsPerDay] = useState(null); // null = theo phác đồ BYT
   const [preferences, setPreferences] = useState('');
   const [generating, setGenerating] = useState(false);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   const [latestResult, setLatestResult] = useState(null);
   const [history, setHistory] = useState([]);
   const [expandedPlanId, setExpandedPlanId] = useState(null);
@@ -14,11 +15,14 @@ export default function MealPlanPage({ patientId, overview }) {
 
   const loadHistory = async () => {
     if (!patientId) return;
+    setLoadingHistory(true);
     try {
       const data = await api.getMealPlans(patientId);
       setHistory(data);
     } catch {
       // ignore
+    } finally {
+      setLoadingHistory(false);
     }
   };
 
@@ -209,7 +213,12 @@ export default function MealPlanPage({ patientId, overview }) {
           </span>
           <h2 className="text-base font-bold text-slate-900">Lịch sử thực đơn đã lưu ({history.length})</h2>
         </div>
-        {history.length === 0 ? (
+        {loadingHistory && history.length === 0 ? (
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <Loader2 className="h-3.5 w-3.5 animate-spin text-sky-600" />
+            Đang tải lịch sử thực đơn đã lưu...
+          </div>
+        ) : history.length === 0 ? (
           <p className="text-xs text-slate-500">Chưa có thực đơn nào được lưu cho bệnh nhân này.</p>
         ) : (
           <div className="space-y-2.5">

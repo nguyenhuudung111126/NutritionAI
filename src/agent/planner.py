@@ -21,7 +21,7 @@ class DishIngredientSchema(BaseModel):
 
 class DishSchema(BaseModel):
     name: str = Field(description="Tên món ăn Việt Nam (VD: Cá quả hấp gừng, Canh bí đao)")
-    cooking_method: str = Field(description="Cách chế biến: Luộc / Hấp / Kho nhạt / Nấu canh...")
+    cooking_method: str = Field(description="Ngắn gọn 1-2 từ: Luộc / Hấp / Kho nhạt / Nấu canh / Áp chảo")
     ingredients: List[DishIngredientSchema]
 
 
@@ -40,7 +40,7 @@ class DayPlanSchema(BaseModel):
 class MealPlanOutput(BaseModel):
     note_for_patient: str = Field(
         default="",
-        description="Giải thích ngắn cách đáp ứng hồ sơ cá nhân, khẩu vị/món yêu thích của người dùng và lưu ý an toàn bệnh lý.",
+        description="Viết ĐÚNG 1-2 câu ngắn (tối đa 40 từ): nêu cách đáp ứng sở thích hoặc lý do đổi món nếu xung đột bệnh lý/dị ứng.",
     )
     days: List[DayPlanSchema]
 
@@ -77,16 +77,16 @@ def _auto_balance_day_portions(
 
     limits = []
     if target.get("protein_g") is not None:
-        limits.append(("protein_g", float(target["protein_g"]) * 1.07, 11.0, 20.0, True))
+        limits.append(("protein_g", float(target["protein_g"]) * 1.06, 8.0, 15.0, True))
     if target.get("phosphate_max_mg") is not None:
-        limits.append(("phosphorus_mg", float(target["phosphate_max_mg"]) * 0.98, 130.0, 20.0, True))
+        limits.append(("phosphorus_mg", float(target["phosphate_max_mg"]) * 0.97, 100.0, 15.0, True))
     if target.get("potassium_max_mg") is not None:
-        limits.append(("potassium_mg", float(target["potassium_max_mg"]) * 0.98, 180.0, 25.0, False))
+        limits.append(("potassium_mg", float(target["potassium_max_mg"]) * 0.97, 160.0, 20.0, False))
     if target.get("sodium_max_mg") is not None:
-        limits.append(("sodium_mg", float(target["sodium_max_mg"]) * 0.98, 150.0, 10.0, False))
+        limits.append(("sodium_mg", float(target["sodium_max_mg"]) * 0.97, 140.0, 10.0, False))
 
-    def _trim_excess():
-        for _ in range(5):
+    def _trim_excess(allow_trim_carbs: bool = False):
+        for _ in range(6):
             totals = _compute_day_totals(day, food_map)
             changed = False
             for key, max_allowed, high_thresh, min_grams, skip_high_carb in limits:
@@ -94,6 +94,7 @@ def _auto_balance_day_portions(
                 if cur_total <= max_allowed:
                     continue
                 excess = cur_total - max_allowed
+                eff_thresh = high_thresh * (0.5 if allow_trim_carbs else 1.0)
                 rich_ings = []
                 rich_contrib = 0.0
                 for m in day.meals:
@@ -102,52 +103,108 @@ def _auto_balance_day_portions(
                             f = food_map.get(ing.food_id)
                             if not f:
                                 continue
-                            if skip_high_carb and float(f.get("glucid_g") or 0.0) >= 22.0:
+                            is_carb = float(f.get("glucid_g") or 0.0) >= 22.0
+                            if not allow_trim_carbs and skip_high_carb and is_carb:
                                 continue
+                            floor_g = 40.0 if is_carb else min_grams
                             per100 = float(f.get(key) or 0.0)
-                            if per100 >= high_thresh and ing.grams > min_grams:
-                                rich_ings.append((ing, per100))
+                            if per100 >= eff_thresh and ing.grams > floor_g:
+                                rich_ings.append((ing, floor_g))
                                 rich_contrib += per100 * ing.grams / 100.0
                 if rich_contrib <= 0:
                     continue
-                scale = max(0.35, (rich_contrib - excess * 1.05) / rich_contrib)
-                for ing, _ in rich_ings:
-                    new_g = max(min_grams, round((ing.grams * scale) / 5.0) * 5.0)
+                scale = max(0.35, (rich_contrib - excess * 1.06) / rich_contrib)
+                for ing, floor_g in rich_ings:
+                    new_g = max(floor_g, round((ing.grams * scale) / 5.0) * 5.0)
                     if new_g < ing.grams:
                         ing.grams = new_g
                         changed = True
             if not changed:
                 break
 
-    _trim_excess()
+    # Vòng 1: ưu tiên giảm thịt/cá giàu đạm & phospho trước; Vòng 2: nếu vẫn vượt (VD: ăn nhiều gạo lứt) thì giảm nhẹ cả tinh bột giàu phospho
+    _trim_excess(allow_trim_carbs=False)
+    _trim_excess(allow_trim_carbs=True)
 
-    # Nếu năng lượng bị hụt dưới 78% mục tiêu, bù nhẹ bằng tinh bột ít đạm/ít phospho sẵn có trong thực đơn
+    # Nếu năng lượng bị hụt dưới ngưỡng tối thiểu, bù thông minh bằng tinh bột ít đạm/ít phospho (Miến dong / Khoai lang / Gạo lứt) trong giới hạn trần
     e_target = float(target.get("energy_kcal") or 0.0)
+    min_kcal = max(1250.0, e_target * 0.76) if e_target > 0 else 0.0
     if e_target > 0:
         totals = _compute_day_totals(day, food_map)
-        if totals["energy_kcal"] < e_target * 0.78:
+        if totals["energy_kcal"] < min_kcal:
+            p_cap = float(target["protein_g"]) * 1.06 if target.get("protein_g") is not None else 9999.0
+            ph_cap = float(target["phosphate_max_mg"]) * 0.97 if target.get("phosphate_max_mg") is not None else 99999.0
+            k_cap = float(target["potassium_max_mg"]) * 0.97 if target.get("potassium_max_mg") is not None else 99999.0
+            na_cap = float(target["sodium_max_mg"]) * 0.97 if target.get("sodium_max_mg") is not None else 99999.0
+
+            def _max_safe_add_grams(f_row: Dict[str, Any], cur_tot: Dict[str, float]) -> float:
+                max_g = 220.0
+                for col, cap_val in (
+                    ("protein_g", p_cap),
+                    ("phosphorus_mg", ph_cap),
+                    ("potassium_mg", k_cap),
+                    ("sodium_mg", na_cap),
+                ):
+                    per100 = float(f_row.get(col) or 0.0)
+                    if per100 > 0:
+                        headroom = max(0.0, cap_val - cur_tot.get(col, 0.0))
+                        max_g = min(max_g, (headroom / per100) * 100.0)
+                return max(0.0, round(max_g / 5.0) * 5.0)
+
+            # Ưu tiên tăng gam các món tinh bột ít đạm/ít phospho đã có trong ngày
             carb_ings = []
-            carb_kcal = 0.0
             for m in day.meals:
                 for d in m.dishes:
                     for ing in d.ingredients:
                         f = food_map.get(ing.food_id)
-                        if not f:
-                            continue
-                        if (
-                            float(f.get("glucid_g") or 0.0) >= 20.0
-                            and float(f.get("protein_g") or 0.0) <= 9.0
-                            and float(f.get("phosphorus_mg") or 0.0) <= 150.0
-                            and float(f.get("potassium_mg") or 0.0) <= 220.0
-                        ):
-                            carb_ings.append(ing)
-                            carb_kcal += float(f.get("energy_kcal") or 0.0) * ing.grams / 100.0
-            if carb_kcal > 0:
-                needed = e_target * 0.85 - totals["energy_kcal"]
-                up_scale = min(1.8, (carb_kcal + max(0.0, needed)) / carb_kcal)
-                for ing in carb_ings:
-                    ing.grams = min(280.0, round((ing.grams * up_scale) / 5.0) * 5.0)
-                _trim_excess()
+                        if f and float(f.get("glucid_g") or 0.0) >= 20.0 and float(f.get("protein_g") or 0.0) <= 8.5:
+                            carb_ings.append((ing, f))
+            # Sắp xếp ưu tiên tinh bột ít Phospho nhất (Khoai lang / Miến dong trước Gạo lứt)
+            carb_ings.sort(key=lambda pair: float(pair[1].get("phosphorus_mg") or 0.0))
+            for ing, f_row in carb_ings:
+                totals = _compute_day_totals(day, food_map)
+                if totals["energy_kcal"] >= e_target * 0.85:
+                    break
+                kcal100 = float(f_row.get("energy_kcal") or 0.0)
+                if kcal100 <= 0:
+                    continue
+                need_g = ((e_target * 0.85 - totals["energy_kcal"]) / kcal100) * 100.0
+                safe_add = min(need_g, _max_safe_add_grams(f_row, totals), max(0.0, 260.0 - ing.grams))
+                add_g = round(safe_add / 5.0) * 5.0
+                if add_g >= 10.0:
+                    ing.grams += add_g
+
+            # Nếu vẫn dưới min_kcal (VD: AI quên tinh bột ở bữa chính), tự động chèn thêm 1 món tinh bột ít Phospho có sẵn trong food_map
+            totals = _compute_day_totals(day, food_map)
+            if totals["energy_kcal"] < min_kcal and day.meals:
+                for fallback_id, dish_title, method in (
+                    (38, "Miến dong luộc/nấu", "Luộc"),
+                    (31, "Khoai lang luộc", "Luộc"),
+                    (5, "Cơm gạo lứt", "Nấu"),
+                ):
+                    f_row = food_map.get(fallback_id)
+                    if not f_row:
+                        continue
+                    kcal100 = float(f_row.get("energy_kcal") or 0.0)
+                    if kcal100 <= 0:
+                        continue
+                    need_g = ((e_target * 0.82 - totals["energy_kcal"]) / kcal100) * 100.0
+                    safe_g = min(200.0, need_g, _max_safe_add_grams(f_row, totals))
+                    add_g = round(safe_g / 5.0) * 5.0
+                    if add_g >= 30.0:
+                        target_meal = next((m for m in day.meals if m.meal in ("Trưa", "Tối")), day.meals[0])
+                        target_meal.dishes.append(
+                            DishSchema(
+                                name=dish_title,
+                                cooking_method=method,
+                                ingredients=[DishIngredientSchema(food_id=fallback_id, grams=add_g)],
+                            )
+                        )
+                        totals = _compute_day_totals(day, food_map)
+                        if totals["energy_kcal"] >= min_kcal:
+                            break
+
+            _trim_excess(allow_trim_carbs=True)
 
     return day
 
@@ -232,7 +289,7 @@ def generate_meal_plan(
     safe_preferences = mask_pii_text(user_preferences)
     log_pii_redaction(run_id, "user_preferences", user_preferences, safe_preferences)
 
-    pool_limit = 64 if gen_days <= 1 else (80 if gen_days <= 3 else 96)
+    pool_limit = 48 if gen_days <= 1 else (64 if gen_days <= 3 else 84)
     with trace_step("tool_get_safe_foods", as_type="tool", input_data={"patient_id": patient_id, "period": period}):
         safe_foods = get_safe_foods(
             patient_id=patient_id,
@@ -309,44 +366,84 @@ QUY TẮC ĐA DẠNG MÓN ĂN (BẮT BUỘC):
         else ""
     )
 
-    # Vòng lặp tối đa 2 lần nếu Guardrail phát hiện vượt ngưỡng chất
+    # Vòng lặp tối đa 2 lần: nếu Lần 1 có ngày bị lỗi, Lần 2 CHỈ gọi AI sửa lại ĐÚNG các ngày bị lỗi (Partial-Day Retry) thay vì bỏ cả tuần
+    failed_day_indices: List[int] = []
     for attempt in range(2):
+        is_partial_retry = attempt > 0 and best_plan is not None and 0 < len(failed_day_indices) < len(best_plan.days)
+        req_days = len(failed_day_indices) if is_partial_retry else gen_days
+        day_scope_note = (
+            f"CHỈ lập lại ĐÚNG {req_days} ngày bị lỗi (gán đúng `day_index` là {failed_day_indices})"
+            if is_partial_retry
+            else f"lập thực đơn {gen_days} ngày (đa dạng món, không lặp đạm/rau liên tiếp)"
+        )
         prompt = f"""
 Bạn là chuyên gia dinh dưỡng lâm sàng & đầu bếp Việt Nam.
-Hãy lập thực đơn {gen_days} ngày (đa dạng món, không lặp đạm/rau liên tiếp) CHỈ SỬ DỤNG `food_id` từ danh sách nguyên liệu an toàn dưới đây.
+Hãy {day_scope_note} CHỈ SỬ DỤNG `food_id` từ danh sách nguyên liệu an toàn dưới đây.
 
 {profile_block}
 MỤC TIÊU DINH DƯỠNG MỖI NGÀY (RÀNG BUỘC CỨNG Y KHOA):
 - Phác đồ: {target['regime_code']} - {target['regime_name']}
-- Năng lượng: ~{target['energy_kcal']} Kcal/ngày (đảm bảo đủ tinh bột lành mạnh, không lập thực đơn thiếu calo < 1300 kcal)
+- Năng lượng: ~{target['energy_kcal']} Kcal/ngày (BẮT BUỘC đủ tinh bột lành mạnh ở cả Trưa và Tối; phối hợp Miến dong / Khoai lang với Gạo lứt, không dùng quá 200g Gạo lứt/ngày để tránh vượt Phospho; tối thiểu ≥ 1300 kcal/ngày)
 - Đạm: ~{target['protein_g']} g/ngày{prot_cap_note}
 - Natri tối đa: {target['sodium_max_mg']} mg/ngày | Kali tối đa: {target['potassium_max_mg']} mg/ngày{phos_line}
-- Số bữa bắt buộc: ĐÚNG {target_meals} bữa/ngày, chỉ dùng tên bữa chính xác là: {', '.join(meal_slots)} (nếu số bữa là 3 thì không thêm bữa phụ; nếu người bệnh tiểu đường chỉ ăn 3 bữa, hãy dàn đều tinh bột GI thấp và nhắc nhẹ trong `note_for_patient`).
+- Tên món ăn (`name`) PHẢI khớp đúng tên nguyên liệu của `food_id` đã chọn (tuyệt đối không đặt tên 'Cháo thịt lợn' nếu chọn thịt khác hay Kê).
+- Số bữa bắt buộc: ĐÚNG {target_meals} bữa/ngày, chỉ dùng tên bữa chính xác là: {', '.join(meal_slots)} (nếu số bữa là 3 thì không thêm bữa phụ; nếu người bệnh tiểu đường chỉ ăn 3 bữa, hãy dàn đều tinh bột GI thấp vào cả Sáng/Trưa/Tối).
 - Lưu ý lâm sàng: {target.get('notes', '')}
 {rag_block}{diversity_block}{pref_block}{feedback}
 
 DANH SÁCH NGUYÊN LIỆU AN TOÀN (trên 100g, dùng đúng cột `id`):
 {foods_table}
 """
-        with trace_step(f"llm_meal_plan_attempt_{attempt + 1}", as_type="generation", input_data={"period": period, "attempt": attempt + 1}) as gen_span:
-            plan, used_model = generate_structured(prompt, MealPlanOutput, fast=True)
-            if gen_span is not None:
-                gen_span.update(output={"model": used_model, "days": len(plan.days)})
+        try:
+            with trace_step(f"llm_meal_plan_attempt_{attempt + 1}", as_type="generation", input_data={"period": period, "attempt": attempt + 1, "req_days": req_days}) as gen_span:
+                plan, used_model = generate_structured(prompt, MealPlanOutput, fast=True)
+                if gen_span is not None:
+                    gen_span.update(output={"model": used_model, "days": len(plan.days)})
+        except Exception:
+            if attempt > 0 and best_plan is not None:
+                # Lần 2 gọi AI sửa lỗi gặp 503/timeout -> giữ nguyên phương án Lần 1 đã cân chỉnh gam, không làm sập trang
+                break
+            raise
 
-        best_plan = plan
+        if is_partial_retry and best_plan is not None:
+            # Ghép các ngày vừa sửa vào đúng vị trí trong thực đơn đã đạt chuẩn ở Lần 1
+            fixed_by_idx = {}
+            for pos, new_d in enumerate(plan.days):
+                target_idx = new_d.day_index if new_d.day_index in failed_day_indices else (
+                    failed_day_indices[pos] if pos < len(failed_day_indices) else new_d.day_index
+                )
+                new_d.day_index = target_idx
+                fixed_by_idx[target_idx] = new_d
+            merged_days = [fixed_by_idx.get(old_d.day_index, old_d) for old_d in best_plan.days]
+            best_plan = MealPlanOutput(
+                note_for_patient=plan.note_for_patient or best_plan.note_for_patient,
+                days=merged_days,
+            )
+        else:
+            best_plan = plan
+
         day_reports = []
         violations_all: List[str] = []
+        failed_day_indices = []
 
         with trace_step(f"guardrail_daily_totals_attempt_{attempt + 1}", as_type="guardrail") as gr_span:
-            for d in plan.days:
+            for d in best_plan.days:
                 _auto_balance_day_portions(d, food_map, target)
                 totals = _compute_day_totals(d, food_map)
                 check = validate_daily_totals(patient_id, totals, run_id=run_id)
+                min_kcal = min(1080.0, float(target.get("energy_kcal") or 1600) * 0.62)
+                if totals.get("energy_kcal", 0.0) < min_kcal:
+                    check = {
+                        "passed": False,
+                        "violations": list(check.get("violations") or [])
+                        + [f"Tổng năng lượng ({totals['energy_kcal']:.0f} kcal) quá thấp (< {min_kcal:.0f} kcal), hãy bổ sung miến dong/khoai lang/cơm gạo lứt vào bữa chính."],
+                    }
                 day_reports.append({"day_index": d.day_index, "totals": totals, "check": check})
                 if not check["passed"]:
+                    failed_day_indices.append(d.day_index)
                     violations_all.extend([f"Ngày {d.day_index}: {v}" for v in check["violations"]])
             if gr_span is not None:
-                gr_span.update(output={"passed": len(violations_all) == 0, "violations": violations_all})
+                gr_span.update(output={"passed": len(violations_all) == 0, "failed_days": failed_day_indices, "violations": violations_all})
 
         if not violations_all:
             all_passed = True
